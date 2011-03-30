@@ -4,5 +4,5 @@
     <item android:drawable="@drawable/beer_sel"
           android:state_selected="true" />
     <!-- When not selected, use white-->
-    <item android:drawable="@drawable/beer_sel" />
+    <item android:drawable="@drawable/beer_unsel" />
 </selector>
