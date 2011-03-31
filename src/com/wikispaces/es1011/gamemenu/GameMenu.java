@@ -28,9 +28,9 @@ public class GameMenu extends TabActivity {
         tabHost.addTab(spec);
 
         // Do the same for the other tabs
-        intent = new Intent().setClass(this, ActDrinkSuggest.class);
-        spec = tabHost.newTabSpec("drinkSuggest").setIndicator("Suggest",
-                          res.getDrawable(R.drawable.ic_tab_actdrinksuggest))
+        intent = new Intent().setClass(this, ActWaiterCall.class);
+        spec = tabHost.newTabSpec("waiterCall").setIndicator("Waiter",
+                          res.getDrawable(R.drawable.ic_tab_actwaitercall))
                       .setContent(intent);
         tabHost.addTab(spec);
 

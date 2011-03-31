@@ -13,13 +13,13 @@
             </intent-filter>
         </activity>
 		<activity android:name=".ActDrinkSelector"
-                  android:label="@string/actDrinkSel">
+                  android:label="@string/s_act_DrinkSelector">
         </activity>
-		<activity android:name=".ActDrinkSuggest"
-                  android:label="@string/actDrinkSugg">
+		<activity android:name="ActWaiterCall"
+                  android:label="@string/s_act_WaiterCall">
         </activity>
 		<activity android:name=".ActGameEntertainer"
-                  android:label="@string/actGame">
+                  android:label="@string/s_act_GameEntertainer">
         </activity>
     </application>
 </manifest>

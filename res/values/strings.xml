@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GameMenu</string>
-    <string name="actDrinkSel">Drink Select</string>
-    <string name="actDrinkSugg">Drink Suggest</string>
-    <string name="actGame">Game</string>
+    <string name="s_act_DrinkSelector">Drinks</string>
+    <string name="s_act_WaiterCall">Waiter</string>
+    <string name="s_act_GameEntertainer">Game</string>
 </resources>

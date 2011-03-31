@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.*;
 import android.widget.*;
 
-public class ActDrinkSuggest extends Activity {
+public class ActWaiterCall extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
