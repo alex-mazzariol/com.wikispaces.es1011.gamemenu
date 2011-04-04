@@ -41,8 +41,6 @@ public class ActWaiterCall extends Activity implements SurfaceHolder.Callback, O
 				//FileUtilities.StoreByteImage(mContext, imageData,
 				//		 50, "ImageName");
 				
-				
-				
 				mCamera.startPreview();
 				
 				setResult(FOTO_MODE,mIntent);

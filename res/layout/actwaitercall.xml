@@ -2,9 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical">
-
-	<SurfaceView android:id="@+id/actwaitercall_camera"
-		android:layout_width="fill_parent" android:layout_height="10dip"
-		android:layout_weight="1">
-	</SurfaceView>
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="50px">
+		<TextView
+			android:text="red"
+			android:gravity="center_horizontal"
+			android:background="#aa0000"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:layout_weight="1"/>
+		<SurfaceView android:id="@+id/actwaitercall_camera"
+			android:layout_width="fill_parent" android:layout_height="10dip"
+			android:layout_weight="1">
+		</SurfaceView>
+		<TextView
+			android:text="red"
+			android:gravity="center_horizontal"
+			android:background="#aa0000"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:layout_weight="1"/>
+	</LinearLayout>
 </LinearLayout>
