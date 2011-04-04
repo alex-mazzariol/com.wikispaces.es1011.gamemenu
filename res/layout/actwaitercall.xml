@@ -20,8 +20,8 @@
 			android:layout_height="fill_parent"
 			android:layout_weight="1"/>
 		<SurfaceView android:id="@+id/actwaitercall_camera"
-			android:layout_width="60px"
-			android:layout_height="80px"
+			android:layout_width="160dp"
+			android:layout_height="120dp"
 			android:layout_weight="1">
 		</SurfaceView>
 		<TextView
