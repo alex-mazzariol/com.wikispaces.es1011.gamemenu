@@ -30,7 +30,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     // create a new ImageView for each item referenced by the Adapter
-    @Override
+    //@Override
     public View getView(int position, View convertView, ViewGroup parent) {
     	ImageView imageView;
     	TextView tvLabel;

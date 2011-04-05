@@ -11,8 +11,10 @@ import android.view.View.OnClickListener;
 
 public class CameraShooter extends SurfaceView implements SurfaceHolder.Callback, OnClickListener {
 	
+	
 	public CameraShooter(Context context) {
 		super(context);
+		setBackgroundColor(0xffaaaaaa);
 	}
 
 	static final int FOTO_MODE = 0;
@@ -37,6 +39,7 @@ public class CameraShooter extends SurfaceView implements SurfaceHolder.Callback
 				//finish();
 				mPreviewRunning = false;
 				mCamera.stopPreview();
+				//setBackgroundResource(R.color.grey_1);
 			}
 		}
 	};
@@ -79,6 +82,8 @@ public class CameraShooter extends SurfaceView implements SurfaceHolder.Callback
 			mCamera.takePicture(null, mPictureCallback, mPictureCallback);
 		else
 		{
+			//setBackgroundResource(R.color.grey_1);
+			
 			if(mCamera == null)
 				mCamera = Camera.open();
 			else
@@ -88,7 +93,7 @@ public class CameraShooter extends SurfaceView implements SurfaceHolder.Callback
 			}
 			
 			Camera.Parameters p = mCamera.getParameters();
-			p.setPreviewSize(160, 120);
+			p.setPreviewSize(getWidth(), getHeight());
 			mCamera.setParameters(p);
 			try {
 				mCamera.setPreviewDisplay(sHolder);
