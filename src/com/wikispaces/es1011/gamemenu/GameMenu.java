@@ -2,6 +2,7 @@ package com.wikispaces.es1011.gamemenu;
 
 import android.app.*;
 import android.widget.*;
+import android.widget.TabHost.*;
 import android.content.*;
 import android.content.res.*;
 import android.os.*;
@@ -15,7 +16,7 @@ public class GameMenu extends TabActivity {
         
         Resources res = getResources(); // Resource object to get Drawables
         TabHost tabHost = getTabHost();  // The activity TabHost
-        TabHost.TabSpec spec;  // Reusable TabSpec for each tab
+        TabSpec spec;  // Reusable TabSpec for each tab
         Intent intent;  // Reusable Intent for each tab
 
         // Create an Intent to launch an Activity for the tab (to be reused)
@@ -29,9 +30,10 @@ public class GameMenu extends TabActivity {
 
         // Do the same for the other tabs
         intent = new Intent().setClass(this, ActWaiterCall.class);
-        spec = tabHost.newTabSpec("waiterCall").setIndicator("Waiter",
-                          res.getDrawable(R.drawable.ic_tab_actwaitercall))
+        spec = tabHost.newTabSpec("waiterCall")
+        	.setIndicator("Waiter", res.getDrawable(R.drawable.ic_tab_actwaitercall))
                       .setContent(intent);
+        
         tabHost.addTab(spec);
 
         intent = new Intent().setClass(this, ActGameEntertainer.class);
@@ -40,6 +42,6 @@ public class GameMenu extends TabActivity {
                       .setContent(intent);
         tabHost.addTab(spec);
 
-        tabHost.setCurrentTab(2);
+        tabHost.setCurrentTab(0);
     }
 }

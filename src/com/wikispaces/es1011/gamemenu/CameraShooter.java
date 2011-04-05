@@ -14,7 +14,7 @@ public class CameraShooter extends SurfaceView implements SurfaceHolder.Callback
 	
 	public CameraShooter(Context context) {
 		super(context);
-		setBackgroundColor(0xffaaaaaa);
+		//setBackgroundColor(0xff000000);
 	}
 
 	static final int FOTO_MODE = 0;
@@ -83,6 +83,7 @@ public class CameraShooter extends SurfaceView implements SurfaceHolder.Callback
 		else
 		{
 			//setBackgroundResource(R.color.grey_1);
+			//setBackgroundColor(0xFF000000);
 			
 			if(mCamera == null)
 				mCamera = Camera.open();

@@ -14,7 +14,7 @@ public class ActDrinkSelector extends Activity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.actdrinkselector);
 	
-	    GridView gridview = (GridView) findViewById(R.id.gridview);
+	    GridView gridview = (GridView) findViewById(R.id.ads_gridview);
 	    gridview.setAdapter(new ImageAdapter(this));
 	
 	    gridview.setOnItemClickListener(new OnItemClickListener() {
