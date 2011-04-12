@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -11,9 +12,9 @@ import android.view.View.OnClickListener;
 
 public class CameraShooter extends SurfaceView implements SurfaceHolder.Callback, OnClickListener {
 	
-	
 	public CameraShooter(Context context) {
 		super(context);
+		
 		//setBackgroundColor(0xff000000);
 	}
 
@@ -106,4 +107,18 @@ public class CameraShooter extends SurfaceView implements SurfaceHolder.Callback
 			mPreviewRunning = true;
 		}
 	}
+	
+	public void handleOrientation(int orientation) {
+		if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) return;
+
+		Camera.Parameters cPar = mCamera.getParameters();
+		
+	    orientation = (orientation + 45) / 90 * 90;
+	    //int rotation = 0;
+	    
+	    cPar.setRotation(orientation);
+	    
+	    mCamera.setParameters(cPar);
+	}
+    
 }

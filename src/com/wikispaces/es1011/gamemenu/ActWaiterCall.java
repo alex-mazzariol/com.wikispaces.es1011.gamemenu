@@ -1,10 +1,13 @@
 package com.wikispaces.es1011.gamemenu;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.PixelFormat;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.*;
+import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
@@ -15,6 +18,8 @@ public class ActWaiterCall extends Activity {
 	
 	private SurfaceHolder mSurfaceHolder;
 	private CameraShooter csCamera;
+
+	OrientationEventListener mOrientationEventListener;
 	
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -43,7 +48,7 @@ public class ActWaiterCall extends Activity {
 		rLL.addView(csCamera, lp);
 		
 		setContentView(rLL);
-		
+		/*
 		LocationManager lMan = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
 		Location lcLast = lMan.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -55,7 +60,34 @@ public class ActWaiterCall extends Activity {
 		else
 			tvT_2.setText("Unknown location");
 		
-		rLL.addView(tvT_2);
+		rLL.addView(tvT_2);*/
+		 
+		mOrientationEventListener = new oelOrMgr(this);
+	}
+	
+	private class oelOrMgr extends OrientationEventListener {
+		
+		public oelOrMgr(Context ctx){
+			super(ctx, SensorManager.SENSOR_DELAY_NORMAL);
+		}
+	
+		@Override
+		public void onOrientationChanged(int orientation) {
+			csCamera.handleOrientation(orientation);
+		}
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mOrientationEventListener.canDetectOrientation())
+			mOrientationEventListener.enable();		
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mOrientationEventListener.disable();
+	}
+	
 }
