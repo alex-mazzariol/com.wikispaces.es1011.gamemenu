@@ -2,6 +2,7 @@ package com.wikispaces.es1011.gamemenu;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.hardware.SensorManager;
 import android.location.Location;
@@ -17,15 +18,17 @@ import android.widget.TextView;
 public class ActWaiterCall extends Activity {
 	
 	private SurfaceHolder mSurfaceHolder;
-	private CameraShooter csCamera;
+	private Waiter_CameraPreviewView csCamera;
 
-	OrientationEventListener mOrientationEventListener;
+	Waiter_OrientationListen mOrientationEventListener;
 	
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-		csCamera = new CameraShooter(this);
-		csCamera.setOnClickListener(csCamera);
+		csCamera = new Waiter_CameraPreviewView(this);
+		//mOrientationEventListener = new Waiter_OrientationListen(this, csCamera);
+		
+		//csCamera.setOnClickListener(csCamera);
 		mSurfaceHolder = csCamera.getHolder();
 		mSurfaceHolder.addCallback(csCamera);
 		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -61,33 +64,45 @@ public class ActWaiterCall extends Activity {
 			tvT_2.setText("Unknown location");
 		
 		rLL.addView(tvT_2);*/
-		 
-		mOrientationEventListener = new oelOrMgr(this);
 	}
 	
-	private class oelOrMgr extends OrientationEventListener {
-		
-		public oelOrMgr(Context ctx){
-			super(ctx, SensorManager.SENSOR_DELAY_NORMAL);
-		}
-	
-		@Override
-		public void onOrientationChanged(int orientation) {
-			csCamera.handleOrientation(orientation);
-		}
-	}
-
 	@Override
-	public void onResume() {
-		super.onResume();
-		if (mOrientationEventListener.canDetectOrientation())
-			mOrientationEventListener.enable();		
+	public void onStart() {
+		super.onStart();
+		/*if (mOrientationEventListener.canDetectOrientation())
+			mOrientationEventListener.enable();*/
+		csCamera.startPreview();
 	}
 	
 	@Override
 	protected void onPause() {
+		csCamera.stopPreview();
+		//mOrientationEventListener.disable();
 		super.onPause();
-		mOrientationEventListener.disable();
 	}
 	
+	@Override
+	protected void onStop() {
+		csCamera.stopPreview();
+		//mOrientationEventListener.disable();
+		super.onStop();
+	}
+	
+	public void onConfigurationChanged(Configuration newConfig) {
+	    super.onConfigurationChanged(newConfig);
+
+	    /*
+	    // Checks the orientation of the screen
+	    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+	        Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+	    } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+	        Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+	    }
+	    // Checks whether a hardware keyboard is available
+	    if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
+	        Toast.makeText(this, "keyboard visible", Toast.LENGTH_SHORT).show();
+	    } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
+	        Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show();
+	    }*/
+	}
 }
