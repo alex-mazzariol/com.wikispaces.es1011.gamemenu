@@ -44,7 +44,6 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
         getHolder().addCallback(this);
 
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mAccelerometer.
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
         gs.setState(game_GameState.State.READY);
         one = BitmapFactory.decodeResource(getResources(), R.drawable.game_one);
