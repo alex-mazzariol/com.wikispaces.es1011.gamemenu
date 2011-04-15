@@ -13,6 +13,7 @@ public class game_GameState {
 
     public game_GameState() {
         this.lives = 3;
+        this.score = 0;
     }
 
     public void setScore(int points) {

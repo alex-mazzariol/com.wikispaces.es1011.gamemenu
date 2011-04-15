@@ -27,7 +27,7 @@ public class game_Pad extends game_Sprite2D {
     public void Update(long GameTime) {
         if (GameTime - mFrameTimer > speed) {
             mFrameTimer = GameTime;
-            if (mXPos == 0 || mXPos == CanvasW - pad.getWidth()) {
+            if (mXPos <= 0 || mXPos >= CanvasW - pad.getWidth()) {
                 directionX = -directionX;
             }
             mXPos = java.lang.Math.abs(mXPos + directionX) % CanvasW;
