@@ -63,5 +63,6 @@ public class game_Ball extends game_Sprite2D {
 
     public Rect getBox(){
     return box;}
-}
+    }
+
 
