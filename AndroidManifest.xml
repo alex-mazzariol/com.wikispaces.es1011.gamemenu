@@ -19,7 +19,6 @@
                   android:label="@string/s_act_DrinkSelector">
         </activity>
 		<activity android:name="ActWaiterCall"
-					android:configChanges="orientation|keyboardHidden"
 					android:label="@string/s_act_WaiterCall">
         </activity>
 		<activity android:name=".ActGameEntertainer"

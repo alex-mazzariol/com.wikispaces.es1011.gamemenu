@@ -2,6 +2,7 @@ package com.wikispaces.es1011.gamemenu;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.hardware.SensorManager;
@@ -34,6 +35,7 @@ public class ActWaiterCall extends Activity {
 		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		RelativeLayout rLL = new RelativeLayout(this);
 		
