@@ -5,14 +5,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.view.SurfaceView;
 
-public class game_Ball extends game_Sprite2D {
+public class Game_Ball extends Game_Sprite2D {
 
     private Bitmap ball;
     private Rect box;
     public int directionX = -5;
     public int directionY = -5;
 
-    public game_Ball(int CanvasW, int CanvasH, SurfaceView sw) {
+    public Game_Ball(int CanvasW, int CanvasH, SurfaceView sw) {
         super(CanvasW, CanvasH);
 
         ball = BitmapFactory.decodeResource(sw.getResources(), R.drawable.game_sprite_ball);

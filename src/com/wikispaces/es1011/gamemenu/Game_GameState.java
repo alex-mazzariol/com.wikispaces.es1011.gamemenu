@@ -1,6 +1,6 @@
 package com.wikispaces.es1011.gamemenu;
 
-public class game_GameState {
+public class Game_GameState {
 
     private State state;
     public int lives;
@@ -11,7 +11,7 @@ public class game_GameState {
         LOSE, READY, RUNNING, WIN, PAUSE;
     }
 
-    public game_GameState() {
+    public Game_GameState() {
         this.lives = 3;
         this.score = 0;
     }

@@ -5,14 +5,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.view.SurfaceView;
 
-public class game_Pad extends game_Sprite2D {
+public class Game_Pad extends Game_Sprite2D {
 
     public int directionX = 0;
     public int directionY = 0;
     private Rect box1,box2,box3,box4,box5;
     private Bitmap pad;
 
-    public game_Pad(int CanvasW, int CanvasH, SurfaceView sw) {
+    public Game_Pad(int CanvasW, int CanvasH, SurfaceView sw) {
         super(CanvasW, CanvasH);
         pad = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(sw.getResources(), R.drawable.game_sprite_pad), CanvasW / 4, CanvasH / 20, true);
         init(pad, pad.getWidth(), pad.getHeight(), 0, CanvasH - 2 * pad.getHeight());

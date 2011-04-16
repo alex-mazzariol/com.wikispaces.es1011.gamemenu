@@ -9,7 +9,9 @@ import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,8 +23,9 @@ public class ActGameEntertainer extends Activity {
     private SensorManager mSensorManager;
     private PowerManager mPowerManager;
     private WindowManager mWindowManager;
-    private game_GameState gs;
-   private game_GameSurfaceView gsw;
+    private FrameLayout lGameFrame;
+    private Game_GameState gs;
+   private Game_GameSurfaceView gsw;
    private LinearLayout gameLayout;
 
    /** Called when the activity is first created.
@@ -46,15 +49,16 @@ public class ActGameEntertainer extends Activity {
        
        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
        mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass().getName());
 
-       gs = new game_GameState();
-       gsw = new game_GameSurfaceView(this, mSensorManager, gs);
-
-       gs.setState(game_GameState.State.READY);
-
-
+       gs = new Game_GameState();
+       gsw = new Game_GameSurfaceView(this, mSensorManager, gs);
+       
+       lGameFrame = new FrameLayout(this);
+       lGameFrame.addView(gsw);
+       lGameFrame.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+       
+       gs.setState(Game_GameState.State.READY);
    }
 
    @Override
@@ -79,7 +83,6 @@ public class ActGameEntertainer extends Activity {
        gameLayout.addView(tv);
        gameLayout.addView(bu);
        setContentView(gameLayout);
-
        return;
 
    }
@@ -87,8 +90,6 @@ public class ActGameEntertainer extends Activity {
    @Override
    protected void onStart() {
        super.onStart();
-       setContentView(gsw);
-       
    }
 
    @Override
@@ -99,7 +100,8 @@ public class ActGameEntertainer extends Activity {
    @Override
    protected void onResume() {
        super.onResume();
-       
+       setContentView(lGameFrame);
+       gs.setState(Game_GameState.State.READY);
    }
 
    @Override
@@ -111,7 +113,4 @@ public class ActGameEntertainer extends Activity {
    protected void onDestroy() {
        super.onDestroy();
    }
-        
-
-
 }

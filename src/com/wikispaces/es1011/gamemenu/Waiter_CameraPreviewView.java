@@ -7,83 +7,78 @@ import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.util.Log;
 
 public class Waiter_CameraPreviewView extends SurfaceView implements SurfaceHolder.Callback{
 	
-	SurfaceHolder mHolder;  // <2>
+	SurfaceHolder mHolder;
 	SurfaceHolder hPreview;
-	public Camera camera; // <3>
+	public Camera camera = null;
+	int iOrientation = 0;
 
 	Waiter_CameraPreviewView(Context context) {
 		super(context);
 
-		// Install a SurfaceHolder.Callback so we get notified when the
-		// underlying surface is created and destroyed.
-		mHolder = getHolder(); // <4>
-		mHolder.addCallback(this); // <5>
-		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // <6>
+		mHolder = getHolder();
+		mHolder.addCallback(this);
+		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 
-	// Called once the holder is ready
-	public void surfaceCreated(SurfaceHolder holder) { // <7>
-		// The Surface has been created, acquire the camera and tell it where
-		// to draw.
+	public void surfaceCreated(SurfaceHolder holder) {
+		//Init the handle to the preview holder, so startPreview() can be
+		// called.
 		hPreview = holder;
 		startPreview();
 	}
 	
 	public void startPreview()
 	{
-		if(hPreview == null) return;
-		camera = Camera.open(); // <8>
+		if(hPreview == null || camera != null) return;
 		try {
-			camera.setPreviewDisplay(hPreview); // <9>
-
-			camera.setPreviewCallback(new PreviewCallback() { // <10>
+			camera = Camera.open();
+			camera.setPreviewDisplay(hPreview);
+			camera.setPreviewCallback(new PreviewCallback() {
 						// Called for each frame previewed
-						public void onPreviewFrame(byte[] data, Camera camera) { // <11>
-							//Log.d(TAG, "onPreviewFrame called at: "
-							//		+ System.currentTimeMillis());
-							Waiter_CameraPreviewView.this.invalidate(); // <12>
+						public void onPreviewFrame(byte[] data, Camera camera) {
+							Waiter_CameraPreviewView.this.invalidate();
 						}
 					});
-		} catch (IOException e) { // <13>
+			camera.setDisplayOrientation(iOrientation);
+			camera.startPreview();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void stopPreview()
 	{
-		hPreview = null;
 		if(camera != null)
 		{
 			camera.stopPreview();
+			
+			//Next two calls are needed before release() because if
+			// a callback fires just after release() has been called
+			// the activity may crash unexpectedly.
+			camera.setPreviewCallback(null);
+			try {
+				camera.setPreviewDisplay(null);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			camera.release();
 			camera = null;
 		}
 	}
 
-	// Called when the holder is destroyed
-	public void surfaceDestroyed(SurfaceHolder holder) { // <14>
+	public void surfaceDestroyed(SurfaceHolder holder) {
 		stopPreview();
 	}
 
-	// Called when holder has changed
-	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) { // <15>
-		camera.startPreview();
+	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
+		hPreview = holder;
+		startPreview();
 	}
 
-	/*
-	public Waiter_CameraShooter(Context context) {
-		super(context);
-		
-		//setBackgroundColor(0xff000000);
-	}
-	static final int FOTO_MODE = 0;
-	Camera mCamera;
-	boolean mPreviewRunning = false;
-	SurfaceHolder sHolder;
-	int iW, iH;
-	
 	Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 		public void onPictureTaken(byte[] imageData, Camera c) {
 
@@ -99,94 +94,19 @@ public class Waiter_CameraPreviewView extends SurfaceView implements SurfaceHold
 				//setResult(FOTO_MODE,mIntent);
 				//finish();
 				//setBackgroundResource(R.color.grey_1);
-				captureStop();
+				stopPreview();
 			}
 		}
 	};
-	
-	public void captureStop()
+
+	public void takePhoto()
 	{
-		mPreviewRunning = false;
-		mCamera.stopPreview();
+		if(camera != null)
+			camera.takePicture(null, mPictureCallback, mPictureCallback);
 	}
 
-	public void surfaceCreated(SurfaceHolder holder) {
-		
+	public void correctOrientation(int rotation) {
+		iOrientation = (rotation * (-90) + 90) % 360;
+		Log.d("Waiter", "Corrected orientation " + rotation);
 	}
-
-	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-		if (mPreviewRunning) {
-			mCamera.stopPreview();
-		
-			Camera.Parameters p = mCamera.getParameters();
-			p.setPreviewSize(160, 120);
-			mCamera.setParameters(p);
-			try {
-				mCamera.setPreviewDisplay(holder);
-			} catch (IOException e) {}
-			mCamera.startPreview();
-			mPreviewRunning = true;
-		}
-		
-		sHolder = holder;
-		iW = w;
-		iH = h;
-	}
-
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		if(mPreviewRunning)
-		{
-			mCamera.stopPreview();
-			mPreviewRunning = false;
-			mCamera.release();
-		}
-	}
-
-	public void onClick(View arg0)
-	{
-		if(mPreviewRunning)
-			mCamera.takePicture(null, mPictureCallback, mPictureCallback);
-		else
-		{
-			//setBackgroundResource(R.color.grey_1);
-			setBackgroundColor(0xFF000000);
-			
-			if(mCamera == null)
-				mCamera = Camera.open();
-			else
-			{
-				mCamera.release();
-				mCamera = Camera.open();
-			}
-			
-			Camera.Parameters p = mCamera.getParameters();
-			p.setPreviewSize(getWidth(), getHeight());
-			mCamera.setParameters(p);
-			try {
-				mCamera.setPreviewDisplay(sHolder);
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-			mCamera.startPreview();
-			mPreviewRunning = true;
-		}
-	}
-	
-	public void handleOrientation(int orientation) {
-		if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) return;
-
-		//If events happen BEFORE the camera is activated just ignore them
-		if(mCamera == null) return;
-		
-		Camera.Parameters cPar = mCamera.getParameters();
-		
-	    orientation = (orientation + 45) / 90 * 90;
-	    //int rotation = 0;
-	    
-	    cPar.setRotation(orientation);
-	    
-	    mCamera.setParameters(cPar);
-	}
-    */
 }

@@ -6,7 +6,7 @@ import android.graphics.Rect;
 import android.view.SurfaceView;
 
 
-public class game_BrickMatrix extends game_Sprite2D {
+public class Game_BrickMatrix extends Game_Sprite2D {
 
     private Brick[][] brickMatrix;
     private int matrixRow, matrixColumn;
@@ -15,7 +15,7 @@ public class game_BrickMatrix extends game_Sprite2D {
 
 
 
-    public game_BrickMatrix(int canvasW, int canvasH, SurfaceView sw, int brickNum) {
+    public Game_BrickMatrix(int canvasW, int canvasH, SurfaceView sw, int brickNum) {
         super(canvasW, canvasH);
         this.brickCount = brickNum;
         
@@ -81,7 +81,7 @@ public class game_BrickMatrix extends game_Sprite2D {
     public void Update(long GameTime) {
     }
 
-    public class Brick extends game_Sprite2D {
+    public class Brick extends Game_Sprite2D {
 
     private boolean visible = true;
     public int Xmin, Xmax, Ymin, Ymax;

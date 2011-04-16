@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-public class game_Sprite2D {
+public class Game_Sprite2D {
 
     protected Bitmap mSprite;
     protected int mXPos;
@@ -21,7 +21,7 @@ public class game_Sprite2D {
     public final int brickNum = 30;
 
 
-    public game_Sprite2D(int aCanvasW, int aCanvasH) {
+    public Game_Sprite2D(int aCanvasW, int aCanvasH) {
         mSRectangle = new Rect(0, 0, 0, 0);
         mFrameTimer = 0;
         mCurrentFrame = 0;

@@ -17,26 +17,26 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 
-public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener {
+public class Game_GameSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener {
 
 
     private game_MySurfaceThread thread;
-    private game_Ball ball;
-    private game_Pad pad;
-    private game_BrickMatrix brickMatrix;
+    private Game_Ball ball;
+    private Game_Pad pad;
+    private Game_BrickMatrix brickMatrix;
     private Rect underRect;
     private long GameTime;
     public int viewHeight;
     public int viewWidth;
     private int brickNum = 20;
-    private game_GameState gs;
+    private Game_GameState gs;
     private Sensor mAccelerometer;
     private Bitmap hearts, one, two, three, go;
-    private game_Sprite2D prova;
+    private Game_Sprite2D prova;
     private int i, j, k = 1;
     private boolean flag = true;
     
-    public game_GameSurfaceView(Context context, SensorManager mSensorManager, game_GameState gs) {
+    public Game_GameSurfaceView(Context context, SensorManager mSensorManager, Game_GameState gs) {
         super(context);
          this.gs = gs;
 
@@ -45,7 +45,7 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
 
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-        gs.setState(game_GameState.State.READY);
+        gs.setState(Game_GameState.State.READY);
         one = BitmapFactory.decodeResource(getResources(), R.drawable.game_one);
         two = BitmapFactory.decodeResource(getResources(), R.drawable.game_two);
         three = BitmapFactory.decodeResource(getResources(), R.drawable.game_three);
@@ -61,7 +61,7 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
          */
         Paint rectPaint = new Paint();
         Paint textPaint = new Paint();
-        game_Sprite2D heart = new game_Sprite2D(viewWidth, viewHeight);
+        Game_Sprite2D heart = new Game_Sprite2D(viewWidth, viewHeight);
         rectPaint.setColor(Color.LTGRAY);
         textPaint.setColor(Color.BLUE);
         textPaint.setTextSize(pad.getHeight());
@@ -114,12 +114,12 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
                     }
                 }
                 if (!ball.Update(GameTime)) {
-                    ball = new game_Ball(viewWidth, viewHeight, this);
+                    ball = new Game_Ball(viewWidth, viewHeight, this);
                     if (gs.getLives() > 0) {
                         gs.setLives(gs.getLives() - 1);
                     } else //lose:
                     {
-                        gs.setState(game_GameState.State.LOSE);
+                        gs.setState(Game_GameState.State.LOSE);
                     }
                 }
                 pad.Update(GameTime);
@@ -160,7 +160,7 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
                 if (j < 5) {
                     canvas.drawColor(Color.BLACK);
                     three = Bitmap.createScaledBitmap(three, three.getWidth() / 2, three.getHeight() / 2, true);
-                    prova = new game_Sprite2D(viewWidth, viewHeight);
+                    prova = new Game_Sprite2D(viewWidth, viewHeight);
                     prova.init(three, three.getWidth(), three.getHeight(), (viewWidth - three.getWidth()) / 2, (viewHeight - three.getHeight()) / 2);
                     prova.draw(canvas);
                     SystemClock.sleep(100);
@@ -169,7 +169,7 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
 
                     canvas.drawColor(Color.BLACK);
                     two = Bitmap.createScaledBitmap(two, two.getWidth() / 2, two.getHeight() / 2, true);
-                    prova = new game_Sprite2D(viewWidth, viewHeight);
+                    prova = new Game_Sprite2D(viewWidth, viewHeight);
                     prova.init(two, two.getWidth(), two.getHeight(), (viewWidth - two.getWidth()) / 2, (viewHeight - two.getHeight()) / 2);
                     prova.draw(canvas);
                     SystemClock.sleep(100);
@@ -178,7 +178,7 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
 
                     canvas.drawColor(Color.BLACK);
                     one = Bitmap.createScaledBitmap(one, one.getWidth() / 2, one.getHeight() / 2, true);
-                    prova = new game_Sprite2D(viewWidth, viewHeight);
+                    prova = new Game_Sprite2D(viewWidth, viewHeight);
                     prova.init(one, one.getWidth(), one.getHeight(), (viewWidth - one.getWidth()) / 2, (viewHeight - one.getHeight()) / 2);
                     prova.draw(canvas);
                     SystemClock.sleep(100);
@@ -187,7 +187,7 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
                 } else if (flag) {
 
                     go = Bitmap.createScaledBitmap(go, go.getWidth()/2, go.getHeight()/2, true);
-                    prova = new game_Sprite2D(viewWidth, viewHeight);
+                    prova = new Game_Sprite2D(viewWidth, viewHeight);
                     prova.init(go, go.getWidth(), go.getHeight(), (viewWidth - go.getWidth()) / 2, (viewHeight - go.getHeight()) / 2);
                     prova.draw(canvas);
                     
@@ -196,7 +196,7 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
                 } else {
 
                     SystemClock.sleep(500);
-                    gs.setState(game_GameState.State.RUNNING);
+                    gs.setState(Game_GameState.State.RUNNING);
                     j = 1;
                     i = 1;
                     k = 1;
@@ -210,9 +210,9 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
     public void init() {
 
         //create a graphic
-        ball = new game_Ball(viewWidth, viewHeight, this);
-        pad = new game_Pad(viewWidth, viewHeight, this);
-        brickMatrix = new game_BrickMatrix(viewWidth, viewHeight, this, brickNum);
+        ball = new Game_Ball(viewWidth, viewHeight, this);
+        pad = new Game_Pad(viewWidth, viewHeight, this);
+        brickMatrix = new Game_BrickMatrix(viewWidth, viewHeight, this, brickNum);
         underRect = new Rect(0, viewHeight - pad.getHeight(), viewWidth, viewHeight);
     }
 
@@ -253,10 +253,10 @@ public class game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
     private class game_MySurfaceThread extends Thread {
 
         private SurfaceHolder myThreadSurfaceHolder;
-        private game_GameSurfaceView myThreadSurfaceView;
+        private Game_GameSurfaceView myThreadSurfaceView;
         private boolean myThreadRun = false;
 
-        public game_MySurfaceThread(SurfaceHolder surfaceHolder, game_GameSurfaceView surfaceView) {
+        public game_MySurfaceThread(SurfaceHolder surfaceHolder, Game_GameSurfaceView surfaceView) {
             myThreadSurfaceHolder = surfaceHolder;
             myThreadSurfaceView = surfaceView;
         }
