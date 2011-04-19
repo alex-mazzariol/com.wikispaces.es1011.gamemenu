@@ -90,7 +90,7 @@ public class ActWaiterCall extends Activity implements OnClickListener {
 	    super.onConfigurationChanged(newConfig);
 	}
 
-	@Override
+	//@Override
 	public void onClick(View arg0) {
 		//TODO Make the request to the waiter
 		csCamera.takePhoto();

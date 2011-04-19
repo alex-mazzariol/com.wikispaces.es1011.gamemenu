@@ -20,7 +20,7 @@ import android.view.SurfaceView;
 public class Game_GameSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener {
 
 
-    private game_MySurfaceThread thread;
+    private Game_SurfaceThread thread;
     private Game_Ball ball;
     private Game_Pad pad;
     private Game_BrickMatrix brickMatrix;
@@ -40,7 +40,7 @@ public class Game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
         super(context);
          this.gs = gs;
 
-        thread = new game_MySurfaceThread(getHolder(), this);
+        thread = new Game_SurfaceThread(getHolder(), this);
         getHolder().addCallback(this);
 
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
@@ -250,37 +250,4 @@ public class Game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private class game_MySurfaceThread extends Thread {
-
-        private SurfaceHolder myThreadSurfaceHolder;
-        private Game_GameSurfaceView myThreadSurfaceView;
-        private boolean myThreadRun = false;
-
-        public game_MySurfaceThread(SurfaceHolder surfaceHolder, Game_GameSurfaceView surfaceView) {
-            myThreadSurfaceHolder = surfaceHolder;
-            myThreadSurfaceView = surfaceView;
-        }
-
-        public void setRunning(boolean b) {
-            myThreadRun = b;
-        }
-
-        @Override
-        public void run() {
-            while (myThreadRun) {
-                Canvas c = null;
-                try {
-                    GameTime = System.currentTimeMillis();
-                    c = myThreadSurfaceHolder.lockCanvas(null);
-                    synchronized (myThreadSurfaceHolder) {
-                        myThreadSurfaceView.onDraw(c);
-                    }
-                } finally {
-                    if (c != null) {
-                        myThreadSurfaceHolder.unlockCanvasAndPost(c);
-                    }
-                }
-            }
-        }
-    }
 }
