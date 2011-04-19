@@ -4,4 +4,13 @@
     <string name="s_act_DrinkSelector">Drinks</string>
     <string name="s_act_WaiterCall">Waiter</string>
     <string name="s_act_GameEntertainer">Game</string>
+    <string-array name="name_array">
+        <item>nome1</item>
+        <item>nome2</item>
+        <item>nome3</item>
+        <item>nome4</item>
+        <item>nome5</item>
+        <item>nome6</item>
+        <item>nome7</item>
+    </string-array>
 </resources>

@@ -26,6 +26,8 @@
         </activity>
     </application>
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- To be checked for correct permissions -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
  	<uses-feature android:name="android.hardware.camera" />
 	<uses-feature android:name="android.hardware.camera.autofocus" />
 </manifest>

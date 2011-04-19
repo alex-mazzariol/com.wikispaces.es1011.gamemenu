@@ -30,32 +30,51 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     // create a new ImageView for each item referenced by the Adapter
-    @Override
+    //@Override
     public View getView(int position, View convertView, ViewGroup parent) {
-    	ImageView imageView;
-    	TextView tvLabel;
-    	LinearLayout llIcon;
+    	LinearLayout llLine;
+    	LinearLayout llTexts;
+    	LinearLayout llFirstRow;
+    	ImageView ivDrinkImage;
+    	TextView tvName;
+    	TextView tvPrice;
+    	TextView tvDescr;    	
         
     	if (convertView == null) {  // if it's not recycled, initialize some attributes
-        	llIcon = new LinearLayout(mContext);
-            llIcon.setOrientation(1);
-        	imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(70, 70));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
-            imageView.setImageResource(mThumbIds[position]);
-            tvLabel = new TextView(mContext);
-            tvLabel.setLayoutParams(new GridView.LayoutParams(70, 20));
-            tvLabel.setText("testo");
-            llIcon.addView(imageView, 0);
-            llIcon.addView(tvLabel, 1);
+        	llLine = new LinearLayout(mContext);        	
+            llLine.setOrientation(2);
+        	ivDrinkImage = new ImageView(mContext);
+        	ivDrinkImage.setLayoutParams(new GridView.LayoutParams(70, 70));
+        	ivDrinkImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        	ivDrinkImage.setPadding(8, 8, 8, 8);
+        	ivDrinkImage.setImageResource(mThumbIds[position]);
+        	llTexts = new LinearLayout(mContext);
+        	llTexts.setLayoutParams(new GridView.LayoutParams(-1, 70));
+        	llTexts.setOrientation(1);
+        	llLine.addView(ivDrinkImage, 0);
+        	llLine.addView(llTexts, 1);
+        	llFirstRow = new LinearLayout (mContext);
+        	llFirstRow.setOrientation(2);
+        	tvName = new TextView (mContext);
+        	tvName.setLayoutParams(new GridView.LayoutParams(-1, 35));
+        	tvName.setText("Name");
+        	tvPrice = new TextView (mContext);
+        	tvPrice.setLayoutParams(new GridView.LayoutParams(100, 35));
+        	tvPrice.setText("5,00 €");
+        	llFirstRow.addView(tvName, 0);
+        	llFirstRow.addView(tvPrice, 1);
+        	tvDescr = new TextView (mContext);
+        	tvDescr.setLayoutParams(new GridView.LayoutParams(-1, 35));
+        	tvDescr.setText("Description");
+        	llTexts.addView(llFirstRow, 0);
+        	llTexts.addView(tvDescr, 1);      
     	} 
         
         else {
-        	llIcon = (LinearLayout) convertView;
+        	llLine = (LinearLayout) convertView;
         }
 
-    	return llIcon;
+    	return llLine;
     }
 
     // references to our images
