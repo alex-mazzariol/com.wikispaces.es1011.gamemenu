@@ -1,33 +1,43 @@
 package com.wikispaces.es1011.gamemenu;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
+import android.hardware.Camera;
+import android.hardware.Camera.PreviewCallback;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.*;
 import android.view.Gravity;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class ActWaiterCall extends Activity implements OnClickListener {
+public class ActWaiterCall extends Activity implements OnClickListener, SurfaceHolder.Callback {
 	
-	private Waiter_CameraPreviewView csCamera;
+	//private Waiter_CameraPreviewView csCamera;
+	private SurfaceView svPreview;
 	private LinearLayout rLL;
 	private Location lcLast;
 	private Criteria cBest;
 	private LocationManager lMan;
 	private TextView tvLocation;
 	private Waiter_LocationUpdaterThread thUpdater;
+	private Camera cCamera;
+	private SurfaceHolder hPreview;
+	private int iOrientation = 0;
 	
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-		csCamera = new Waiter_CameraPreviewView(this);
+		//csCamera = new Waiter_CameraPreviewView(this);
 		
 		lMan = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
@@ -42,14 +52,12 @@ public class ActWaiterCall extends Activity implements OnClickListener {
 		tvLocation.setHeight(40);
 		tvLocation.setGravity(Gravity.CENTER_HORIZONTAL);
 		
-		//locUpdate();
-		
 		rLL = new LinearLayout(this);
 		rLL.setOrientation(LinearLayout.VERTICAL);
 		rLL.setGravity(Gravity.CENTER_HORIZONTAL);
 		
 		TextView tvT_1 = new TextView(this);
-		tvT_1.setText("Click the black area to\nsend a request to the waiter.");
+		tvT_1.setText("Tap the screen to\nsend a request to the waiter.");
 		tvT_1.setWidth(LayoutParams.FILL_PARENT);
 		tvT_1.setHeight(40);
 		tvT_1.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -59,12 +67,12 @@ public class ActWaiterCall extends Activity implements OnClickListener {
 		rLL.setLayoutParams(lPar);
 		
 		rLL.addView(tvT_1);
-		rLL.addView(csCamera, 180, 240);
 		rLL.addView(tvLocation);
 		
 		rLL.setOnClickListener(this);
 		
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
+		
 		setContentView(rLL);
 		
 		//Location updater setup
@@ -90,7 +98,17 @@ public class ActWaiterCall extends Activity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		thUpdater.start();
+		if(!thUpdater.isAlive())
+			thUpdater.start();
+			
+		
+		svPreview = new SurfaceView(this);
+		hPreview = svPreview.getHolder();
+		hPreview.addCallback(this);
+		hPreview.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		
+		rLL.addView(svPreview, 1, new LayoutParams(180, 240));
+		
 		int iR = getWindowManager().getDefaultDisplay().getRotation();
 		if(iR == 1 || iR == -1)
 		{
@@ -100,21 +118,20 @@ public class ActWaiterCall extends Activity implements OnClickListener {
 		{
 			rLL.getChildAt(1).setLayoutParams(new LayoutParams(180, 240));
 		}
-		csCamera.correctOrientation(iR);
-		csCamera.startPreview();
+		correctOrientation(iR);
 	}
 	
 	@Override
 	protected void onPause() {
 		thUpdater.interrupt();
-		csCamera.stopPreview();
+		stopPreview();
 		super.onPause();
 	}
 	
 	@Override
 	protected void onStop() {
 		thUpdater.interrupt();
-		csCamera.stopPreview();
+		stopPreview();
 		super.onStop();
 	}
 	
@@ -125,7 +142,88 @@ public class ActWaiterCall extends Activity implements OnClickListener {
 	//@Override
 	public void onClick(View arg0) {
 		//TODO Make the request to the waiter
-		csCamera.takePhoto();
-		csCamera.stopPreview();
+		if(cCamera != null)
+			cCamera.takePicture(null, mPictureCallback, mPictureCallback);
+		stopPreview();
 	}
+
+	@Override
+	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+		hPreview = arg0;
+		startPreview();
+	}
+
+	@Override
+	public void surfaceCreated(SurfaceHolder arg0) {
+		hPreview = arg0;
+		startPreview();
+	}
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder arg0) {
+		stopPreview();
+	}
+	
+	public void startPreview()
+	{
+		if(hPreview == null || cCamera != null) return;
+		try {
+			cCamera = Camera.open();
+			cCamera.setPreviewDisplay(hPreview);
+			cCamera.setPreviewCallback(new PreviewCallback() {
+						// Called for each frame previewed
+						public void onPreviewFrame(byte[] data, Camera camera) {
+							svPreview.invalidate();
+						}
+					});
+			cCamera.setDisplayOrientation(iOrientation);
+			cCamera.startPreview();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void stopPreview()
+	{
+		if(cCamera != null)
+		{
+			cCamera.stopPreview();
+			
+			//Next two calls are needed before release() because if
+			// a callback fires just after release() has been called
+			// the activity may crash unexpectedly.
+			cCamera.setPreviewCallback(null);
+			try {
+				cCamera.setPreviewDisplay(null);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			cCamera.release();
+			cCamera = null;
+			rLL.removeViewAt(1);
+		}
+	}
+	
+	public void correctOrientation(int rotation) {
+		iOrientation = (rotation * (-90) + 90) % 360;
+	}
+	
+	Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+		public void onPictureTaken(byte[] imageData, Camera c) {
+
+			if (imageData != null) {
+
+				//Intent mIntent = new Intent();
+
+				//FileUtilities.StoreByteImage(mContext, imageData,
+				//		 50, "ImageName");
+				
+				//mCamera.startPreview();
+				
+				//setResult(FOTO_MODE,mIntent);
+				//finish();
+				//setBackgroundResource(R.color.grey_1);
+			}
+		}
+	};
 }

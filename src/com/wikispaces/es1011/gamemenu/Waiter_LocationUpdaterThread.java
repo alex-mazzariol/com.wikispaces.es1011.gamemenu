@@ -13,12 +13,10 @@ public class Waiter_LocationUpdaterThread extends Thread {
 	public void run() {
 		while(!this.isInterrupted())
 		{
+			aHolder.locUpdate();
 			try {
 				sleep(5000);
-			} catch (InterruptedException e) {
-				break;
-			}
-			aHolder.locUpdate();
+			} catch (InterruptedException e) {}
 		}
 	}
 	
