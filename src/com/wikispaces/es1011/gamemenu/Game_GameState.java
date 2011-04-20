@@ -2,8 +2,8 @@ package com.wikispaces.es1011.gamemenu;
 
 public class Game_GameState {
 
-    private State state;
-    public int lives;
+    private static State state;
+    private int lives;
     private int score;
 
     public enum State {
@@ -24,12 +24,12 @@ public class Game_GameState {
         return score;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public static void setState(State state) {
+        Game_GameState.state = state;
     }
 
-    public State getState() {
-        return state;
+    public static State getState() {
+        return Game_GameState.state;
     }
 
     public int getLives() {
