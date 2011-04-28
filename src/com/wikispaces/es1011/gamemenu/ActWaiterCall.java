@@ -1,8 +1,11 @@
 package com.wikispaces.es1011.gamemenu;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
@@ -20,7 +23,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class ActWaiterCall extends Activity implements OnClickListener, SurfaceHolder.Callback {
+public class ActWaiterCall extends Activity implements OnClickListener, IUpdatable, SurfaceHolder.Callback {
 	
 	//private Waiter_CameraPreviewView csCamera;
 	private SurfaceView svPreview;
@@ -79,7 +82,7 @@ public class ActWaiterCall extends Activity implements OnClickListener, SurfaceH
 		thUpdater = new Waiter_LocationUpdaterThread(this);
 	}
 	
-	public void locUpdate()
+	public void forceUpdate()
 	{
 		lcLast = lMan.getLastKnownLocation(lMan.getBestProvider(cBest, false));
 		locUpdHandler.sendEmptyMessage(0);
@@ -211,17 +214,21 @@ public class ActWaiterCall extends Activity implements OnClickListener, SurfaceH
 		public void onPictureTaken(byte[] imageData, Camera c) {
 
 			if (imageData != null) {
-
-				//Intent mIntent = new Intent();
-
-				//FileUtilities.StoreByteImage(mContext, imageData,
-				//		 50, "ImageName");
+				try {
+					FileOutputStream fRequestImg = openFileOutput("awc_request_image", Context.MODE_PRIVATE);
+					fRequestImg.write(imageData);
+					fRequestImg.close();
+					FileOutputStream fRequestLoc = openFileOutput("awc_request_loc", Context.MODE_PRIVATE);
+					fRequestLoc.write(imageData);
+					fRequestLoc.close();
+					
+				} catch (FileNotFoundException e) {
+					//Silently fail
+					
+				} catch (IOException e) {
+					//Silently fail
+				}
 				
-				//mCamera.startPreview();
-				
-				//setResult(FOTO_MODE,mIntent);
-				//finish();
-				//setBackgroundResource(R.color.grey_1);
 			}
 		}
 	};

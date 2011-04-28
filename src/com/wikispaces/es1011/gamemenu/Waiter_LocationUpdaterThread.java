@@ -2,9 +2,9 @@ package com.wikispaces.es1011.gamemenu;
 
 public class Waiter_LocationUpdaterThread extends Thread {
 
-	ActWaiterCall aHolder;
+	IUpdatable aHolder;
 	
-	public Waiter_LocationUpdaterThread(ActWaiterCall aHld)
+	public Waiter_LocationUpdaterThread(IUpdatable aHld)
 	{
 		aHolder = aHld;
 	}
@@ -13,7 +13,7 @@ public class Waiter_LocationUpdaterThread extends Thread {
 	public void run() {
 		while(!this.isInterrupted())
 		{
-			aHolder.locUpdate();
+			aHolder.forceUpdate();
 			try {
 				sleep(5000);
 			} catch (InterruptedException e) {}
