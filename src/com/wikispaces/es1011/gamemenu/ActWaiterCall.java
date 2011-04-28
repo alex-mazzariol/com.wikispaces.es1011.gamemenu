@@ -219,7 +219,7 @@ public class ActWaiterCall extends Activity implements OnClickListener, IUpdatab
 					fRequestImg.write(imageData);
 					fRequestImg.close();
 					FileOutputStream fRequestLoc = openFileOutput("awc_request_loc", Context.MODE_PRIVATE);
-					fRequestLoc.write(imageData);
+					fRequestLoc.write(tvLocation.getText().toString().getBytes());
 					fRequestLoc.close();
 					
 				} catch (FileNotFoundException e) {
