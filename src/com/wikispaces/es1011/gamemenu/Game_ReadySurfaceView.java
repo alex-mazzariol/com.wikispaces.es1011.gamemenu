@@ -11,8 +11,9 @@ import android.widget.TextView;
 
 public class Game_ReadySurfaceView extends SurfaceView implements IGameSurface {
 
-    private SurfaceHolder sH;
-    
+	private int viewWidth;
+	private int viewHeight;
+	
 	public Game_ReadySurfaceView(Context context, Game_Status gs) {
 		super(context);
 		final TextView tv = new TextView(context);
@@ -46,8 +47,9 @@ public class Game_ReadySurfaceView extends SurfaceView implements IGameSurface {
 
 		public void handleMessage(Message msg) {
 			Canvas c = null;
+			SurfaceHolder sH = getHolder();
 			try {
-
+				
 				c = sH.lockCanvas(null);
 				synchronized (sH) {
 					onDraw(c);
@@ -59,4 +61,11 @@ public class Game_ReadySurfaceView extends SurfaceView implements IGameSurface {
 			}
 		}
 	};
+	
+
+	public void initDimension(int width, int height) {
+
+		this.viewHeight = height;
+		this.viewWidth = width;
+	}
 }

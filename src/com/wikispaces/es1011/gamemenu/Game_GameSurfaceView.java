@@ -21,16 +21,13 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 	private Game_Pad pad;
 	private Game_BrickMatrix brickMatrix;
 	private Rect underRect;
-	private SurfaceHolder sH;
 
-	public Game_GameSurfaceView(Context context, int viewHeight, int viewWidth,
+	public Game_GameSurfaceView(Context context, 
 			Game_Ball ball, Game_Pad pad, Game_BrickMatrix brickMatrix,
 			Rect underRect) {
 		super(context);
-		this.viewHeight = viewHeight;
-		this.viewWidth = viewWidth;
-		this.viewHeight = viewHeight;
-		this.viewWidth = viewWidth;
+		
+		
 		this.ball = ball;
 		this.pad = pad;
 		this.brickMatrix = brickMatrix;
@@ -89,8 +86,9 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 
 		public void handleMessage(Message msg) {
 			Canvas c = null;
+			SurfaceHolder sH = getHolder();
 			try {
-
+				
 				c = sH.lockCanvas(null);
 				synchronized (sH) {
 					onDraw(c);
@@ -102,4 +100,10 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 			}
 		}
 	};
+
+	public void initDimension(int width, int height) {
+		
+		this.viewHeight = height;
+		this.viewWidth = width;
+	}
 }
