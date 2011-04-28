@@ -10,7 +10,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.Display;
-import android.view.View;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.SurfaceHolder.Callback;
@@ -21,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-public class ActGameEntertainer extends Activity implements SensorEventListener, IUpdatable {
+public class ActGameEntertainer extends Activity implements SensorEventListener, IUpdatable, SurfaceHolder.Callback {
 
     public static Display display;
     public TextView tv;
@@ -32,7 +33,8 @@ public class ActGameEntertainer extends Activity implements SensorEventListener,
     
     private Game_SurfaceThread thread;
     
-    private Game_GameState gs;
+    private Game_Status gs;
+    private IGameSurface actuallyShownView;
     private Game_GameSurfaceView gsw;
     private Game_ReadySurfaceView rsw;
     
@@ -74,9 +76,8 @@ public class ActGameEntertainer extends Activity implements SensorEventListener,
        /**
         * Creo il thread per il disegno su schermo
         */
-       thread = new Game_SurfaceThread(gsw.getHolder(), gsw);
-       gsw.getHolder().addCallback((Callback) this);
-       
+       thread = new Game_SurfaceThread(this);
+       gsw.getHolder().addCallback(this);
        
        /**
         * Crea gli oggetti del gioco
@@ -96,15 +97,15 @@ public class ActGameEntertainer extends Activity implements SensorEventListener,
        /**
         * Crea le surface view
         */
-       gs = new Game_GameState();
-       gsw = new Game_GameSurfaceView(this,viewHeight, viewWidth, ball,pad, brickMatrix,underRect,thread);
+       gs = new Game_Status();
+       gsw = new Game_GameSurfaceView(this,viewHeight, viewWidth, ball,pad, brickMatrix,underRect);
        //rsw = new Game_ReadySurfaceView(this,viewHeight, viewWidth, ball,pad, brickMatrix,thread);
        
        lGameFrame = new FrameLayout(this);
        //lGameFrame.addView(rsw);
        lGameFrame.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
        
-       Game_GameState.setState(Game_GameState.State.READY);
+       gs.setState(Game_Status.Status.READY);
        
    }
    
@@ -188,7 +189,7 @@ public void onAccuracyChanged(Sensor arg0, int arg1) {
         for (int j = 0; j < brickMatrix.getRow(); j++) {
             for (int i = 0; i < brickMatrix.getColumn(); i++) {
                 if (brickMatrix.getBrick(i, j).isVisible() && ball.getBox().intersect(brickMatrix.getBrick(i, j).getBox())) {
-                    brickMatrix.getBrick(i, j).Update(thread.getGameTime(), false);
+                    brickMatrix.getBrick(i, j).Update(gs.getGameTime(), false);
 
                     if (ball.getBox().intersect(brickMatrix.getBrick(i, j).getBox().left, brickMatrix.getBrick(i, j).getBox().top, brickMatrix.getBrick(i, j).getBox().left + 1, brickMatrix.getBrick(i, j).getBox().bottom)
                             || ball.getBox().intersect(brickMatrix.getBrick(i, j).getBox().right - 1, brickMatrix.getBrick(i, j).getBox().top, brickMatrix.getBrick(i, j).getBox().right, brickMatrix.getBrick(i, j).getBox().bottom)) {
@@ -202,18 +203,47 @@ public void onAccuracyChanged(Sensor arg0, int arg1) {
 
             }
         }
-        if (!ball.Update(thread.getGameTime())) {
+        
+        //TODO rimuovere dipendenza dal tempo di ball e pad
+        if (!ball.Update(gs.getGameTime())) {
             ball = new Game_Ball(viewWidth, viewHeight, gsw);
             if (gs.getLives() > 0) {
                 gs.setLives(gs.getLives() - 1);
             } else //lose:
             {
-                Game_GameState.setState(Game_GameState.State.LOSE);
+                gs.setState(Game_Status.Status.LOSE);
             }
         }
-        pad.Update(thread.getGameTime());
+        pad.Update(gs.getGameTime());
 
 	}
-	
+
+	public void forceUpdate() {
+		gs.setGameTime(System.currentTimeMillis());
+		actuallyShownView.viewUpdate();
+	}
+
+	//----------------------------------------------------------------------------SurfaceHolder.Callback
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
+
+	}
+
+	public void surfaceCreated(SurfaceHolder holder) {
+		thread.setRunning(true);
+		thread.start();
+	}
+
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		boolean retry = true;
+        thread.setRunning(false);
+        while (retry) {
+            try {
+                thread.join();
+                retry = false;
+            } catch (InterruptedException e) {
+            }
+        }
+	}
 }
 
