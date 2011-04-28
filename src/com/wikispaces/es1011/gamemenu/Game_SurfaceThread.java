@@ -8,6 +8,7 @@ public class Game_SurfaceThread extends Thread {
 
     private boolean myThreadRun = false;
     private long GameTime;
+    private IUpdatable update;
     
 
     public Game_SurfaceThread() {

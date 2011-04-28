@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-public class ActGameEntertainer extends Activity implements SensorEventListener {
+public class ActGameEntertainer extends Activity implements SensorEventListener, IUpdatable {
 
     public static Display display;
     public TextView tv;
