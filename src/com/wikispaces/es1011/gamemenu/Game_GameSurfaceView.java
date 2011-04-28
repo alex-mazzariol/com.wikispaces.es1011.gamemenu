@@ -92,8 +92,7 @@ public class Game_GameSurfaceView extends SurfaceView implements SurfaceHolder.C
     public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
     }
 
-    public void surfaceCreated(SurfaceHolder holder) {
-        
+    public void surfaceCreated(SurfaceHolder holder) {        
         thread.setRunning(true);
         thread.start();
     }

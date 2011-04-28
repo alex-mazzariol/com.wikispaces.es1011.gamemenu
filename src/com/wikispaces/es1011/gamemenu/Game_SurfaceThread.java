@@ -6,16 +6,12 @@ import android.view.SurfaceView;
 
 public class Game_SurfaceThread extends Thread {
 
-    private SurfaceHolder myThreadSurfaceHolder;
-    private SurfaceView myThreadSurfaceView;
     private boolean myThreadRun = false;
     private long GameTime;
     
 
-    public Game_SurfaceThread(SurfaceHolder surfaceHolder, SurfaceView surfaceView) {
-        myThreadSurfaceHolder = surfaceHolder;
-        myThreadSurfaceView = surfaceView;
-        
+    public Game_SurfaceThread() {
+    
     }
 
     public void setRunning(boolean b) {

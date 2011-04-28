@@ -147,19 +147,18 @@ public class ActWaiterCall extends Activity implements OnClickListener, SurfaceH
 		stopPreview();
 	}
 
-	@Override
+
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
 		hPreview = arg0;
 		startPreview();
 	}
 
-	@Override
+
 	public void surfaceCreated(SurfaceHolder arg0) {
 		hPreview = arg0;
 		startPreview();
 	}
 
-	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
 		stopPreview();
 	}

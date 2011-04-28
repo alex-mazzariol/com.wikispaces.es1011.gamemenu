@@ -75,9 +75,8 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
         * Creo il thread per il disegno su schermo
         */
        thread = new Game_SurfaceThread(gsw.getHolder(), gsw);
-       thread = new Game_SurfaceThread(rsw.getHolder(), rsw);
        gsw.getHolder().addCallback((Callback) this);
-       rsw.getHolder().addCallback((Callback) this);
+       
        
        /**
         * Crea gli oggetti del gioco
@@ -95,14 +94,14 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
        
        
        /**
-        * Crea la surface view
+        * Crea le surface view
         */
        gs = new Game_GameState();
        gsw = new Game_GameSurfaceView(this,viewHeight, viewWidth, ball,pad, brickMatrix,underRect,thread);
-       rsw = new Game_ReadySurfaceView(this,viewHeight, viewWidth, ball,pad, brickMatrix,thread);
+       //rsw = new Game_ReadySurfaceView(this,viewHeight, viewWidth, ball,pad, brickMatrix,thread);
        
        lGameFrame = new FrameLayout(this);
-       lGameFrame.addView(rsw);
+       //lGameFrame.addView(rsw);
        lGameFrame.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
        
        Game_GameState.setState(Game_GameState.State.READY);
