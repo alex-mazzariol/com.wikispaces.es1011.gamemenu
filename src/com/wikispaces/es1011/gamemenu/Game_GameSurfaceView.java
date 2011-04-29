@@ -22,17 +22,9 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 	private Game_BrickMatrix brickMatrix;
 	private Rect underRect;
 
-	public Game_GameSurfaceView(Context context, 
-			Game_Ball ball, Game_Pad pad, Game_BrickMatrix brickMatrix,
-			Rect underRect) {
+	public Game_GameSurfaceView(Context context) {
 		super(context);
-		
-		
-		this.ball = ball;
-		this.pad = pad;
-		this.brickMatrix = brickMatrix;
-		this.underRect = underRect;
-	}
+}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -42,15 +34,13 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 		 */
 		Paint rectPaint = new Paint();
 		Paint textPaint = new Paint();
-		Game_Sprite2D heart = new Game_Sprite2D(viewWidth, viewHeight);
 		rectPaint.setColor(Color.LTGRAY);
 		textPaint.setColor(Color.BLUE);
-		textPaint.setTextSize(pad.getHeight());
+		textPaint.setTextSize(viewHeight / 20);
 
 		hearts = BitmapFactory.decodeResource(getResources(),
 				R.drawable.game_heart);
-		hearts = Bitmap.createScaledBitmap(hearts, pad.getHeight(), pad
-				.getHeight(), true);
+		hearts = Bitmap.createScaledBitmap(hearts, viewHeight / 20, viewHeight / 20, true);
 
 		/**
 		 * Draw the sprite in the canvas
@@ -61,20 +51,20 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 		canvas.drawText("SCORE : " + gs.getScore(), 0, viewHeight, textPaint);
 
 		for (int i = 0; i < gs.getLives(); i++) {
-			heart.init(hearts, hearts.getWidth(), hearts.getHeight(), viewWidth
-					- hearts.getWidth() * i, viewHeight - hearts.getHeight());
-			heart.draw(canvas);
+			canvas.drawBitmap(hearts, new Rect(hearts.getWidth(), hearts.getHeight(), viewWidth
+					- hearts.getWidth() * i, viewHeight - hearts.getHeight()), new Rect(hearts.getWidth(), hearts.getHeight(), viewWidth
+							- hearts.getWidth() * i, viewHeight - hearts.getHeight()), null);
 		}
 
 		ball.draw(canvas);
 		pad.draw(canvas);
-		for (int j = 0; j < brickMatrix.getRow(); j++) {
+		/*for (int j = 0; j < brickMatrix.getRow(); j++) {
 			for (int i = 0; i < brickMatrix.getColumn(); i++) {
 				if (brickMatrix.getBrick(i, j).isVisible()) {
 					brickMatrix.getBrick(i, j).draw(canvas);
 				}
 			}
-		}
+		}*/
 
 	}
 
@@ -105,5 +95,15 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 		
 		this.viewHeight = height;
 		this.viewWidth = width;
+	}
+	
+	public void initSprites(Game_Status gs, 
+			Game_Ball ball, Game_Pad pad, Game_BrickMatrix brickMatrix,
+			Rect underRect){
+		this.gs = gs;
+		this.ball = ball;
+		this.pad = pad;
+		this.brickMatrix = brickMatrix;
+		this.underRect = underRect;
 	}
 }
