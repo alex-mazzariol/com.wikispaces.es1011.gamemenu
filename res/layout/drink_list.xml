@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+android:id/drink_list_view"
+	android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp"
+    android:orientation="vertical">
+    
+    <LinearLayout
+    	android:id="@+android:id/first_row"
+		android:orientation="horizontal"
+      	android:layout_width="fill_parent"
+      	android:layout_height="fill_parent"
+      	android:layout_weight="6">
+      	
+      	<TextView
+      		android:id="@+android:id/title"
+      		android:text="lista drink"
+      		android:gravity="center"
+          	android:background="#0aa000"
+          	android:layout_width="fill_parent"
+          	android:layout_height="fill_parent"
+          	android:layout_weight="1">
+      	</TextView>
+      	
+      	<Button
+      		android:id="@+android:id/button_to_order" 
+      		android:layout_width="fill_parent"
+      		android:layout_height="fill_parent"
+      		android:layout_weight="3"
+      		android:text="button"
+      		android:gravity="center">
+      	</Button>
+      	
+    </LinearLayout>
+    
+    <ListView
+    	android:id="@+android:id/list"
+    	android:isScrollContainer="true"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:layout_weight="1"
+    	android:background="#0aaaa0"
+    	android:gravity="center"
+    	android:entries="@array/name_array"
+    	android:textSize="10sp"
+    	>  
+    </ListView>
+    
+</LinearLayout>

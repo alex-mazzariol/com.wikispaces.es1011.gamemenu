@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+android:id/drink_details"
+	android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp"
+    android:orientation="vertical">
+    
+    <LinearLayout
+    	android:id="@+android:id/drink_preview"
+		android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:layout_weight="2"
+    	android:orientation="horizontal">
+    	
+    	<ImageView
+    		android:id="@+android:id/drink_image"
+    		android:layout_width="fill_parent"
+    		android:layout_height="fill_parent"
+    		android:layout_weight="1"
+    		android:padding="10dp"
+    		android:src="@drawable/img1">
+    	</ImageView>
+    	
+    	<LinearLayout
+    		android:id="@+android:id/next_to_image"
+    		android:layout_width="fill_parent"
+    		android:layout_height="fill_parent"
+    		android:layout_weight="1"
+    		android:orientation="vertical">
+    		
+    		<TextView
+    			android:id="@+android:id/drink_name"
+				android:layout_width="fill_parent"
+    			android:layout_height="fill_parent"
+    			android:layout_weight="1"
+    			android:padding="10dp"
+    			android:gravity="center_vertical"
+    			android:textSize="20sp"
+    			android:text="name">
+    		</TextView>	
+    		
+    		<TextView
+    			android:id="@+android:id/drink_shortdescr"
+				android:layout_width="fill_parent"
+    			android:layout_height="fill_parent"
+    			android:layout_weight="1"
+    			android:padding="10dp"
+    			android:gravity="center_vertical"
+    			android:text="short description, like bla bla bla bla bla">
+    		</TextView>
+    		
+    	</LinearLayout>
+    		
+    </LinearLayout>
+    
+    <TextView
+    	android:id="@+android:id/drink_longdescr"
+		android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:layout_weight="1"
+    	android:padding="10dp"
+    	android:gravity="center"
+    	android:text="this will be a long long text within a lot of meaningless words, like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla">
+    </TextView>
+    
+    <LinearLayout
+    	android:id="@+android:id/drink_plusminus"
+		android:orientation="horizontal"
+      	android:layout_width="fill_parent"
+      	android:layout_height="fill_parent"
+      	android:layout_weight="3"
+      	android:background="#ffff0000">
+      	
+      	<Button
+      		android:id="@+android:id/plus"
+      		android:text="+"
+          	android:layout_width="fill_parent"
+          	android:layout_height="fill_parent"
+          	android:layout_weight="1"
+          	android:gravity="center">
+      	</Button>
+      	
+      	<Button
+      		android:id="@+android:id/minus"
+      		android:text="-"
+      		android:layout_width="fill_parent"
+      		android:layout_height="fill_parent"
+      		android:layout_weight="1"
+      		android:gravity="center">
+      	</Button>
+    
+    </LinearLayout>
+    
+</LinearLayout>

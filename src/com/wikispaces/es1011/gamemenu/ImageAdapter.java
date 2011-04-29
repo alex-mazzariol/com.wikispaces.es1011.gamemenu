@@ -43,9 +43,10 @@ public class ImageAdapter extends BaseAdapter {
     	if (convertView == null) {  // if it's not recycled, initialize some attributes
         	llLine = new LinearLayout(mContext);        	
             llLine.setOrientation(2);
+            llLine.setLayoutParams(new GridView.LayoutParams(-1, 70));
         	ivDrinkImage = new ImageView(mContext);
         	ivDrinkImage.setLayoutParams(new GridView.LayoutParams(70, 70));
-        	ivDrinkImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        	ivDrinkImage.setScaleType(ImageView.ScaleType.FIT_XY);
         	ivDrinkImage.setPadding(8, 8, 8, 8);
         	ivDrinkImage.setImageResource(mThumbIds[position]);
         	llTexts = new LinearLayout(mContext);
@@ -59,7 +60,7 @@ public class ImageAdapter extends BaseAdapter {
         	tvName.setLayoutParams(new GridView.LayoutParams(-1, 35));
         	tvName.setText("Name");
         	tvPrice = new TextView (mContext);
-        	tvPrice.setLayoutParams(new GridView.LayoutParams(100, 35));
+        	tvPrice.setLayoutParams(new GridView.LayoutParams(-1, 35));
         	tvPrice.setText("5,00 €");
         	llFirstRow.addView(tvName, 0);
         	llFirstRow.addView(tvPrice, 1);
