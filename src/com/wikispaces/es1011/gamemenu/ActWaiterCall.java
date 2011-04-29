@@ -6,14 +6,17 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.*;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -22,34 +25,34 @@ import android.view.View.OnClickListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ActWaiterCall extends Activity implements OnClickListener, IUpdatable, SurfaceHolder.Callback {
+public class ActWaiterCall extends Activity implements OnClickListener, SurfaceHolder.Callback, LocationListener {
 	
-	//private Waiter_CameraPreviewView csCamera;
 	private SurfaceView svPreview;
 	private LinearLayout rLL;
 	private Location lcLast;
 	private Criteria cBest;
 	private LocationManager lMan;
 	private TextView tvLocation;
-	private Waiter_LocationUpdaterThread thUpdater;
 	private Camera cCamera;
 	private SurfaceHolder hPreview;
 	private int iOrientation = 0;
+	private Context cxActivity;
 	
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-		//csCamera = new Waiter_CameraPreviewView(this);
-		
 		lMan = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-
+		
+		cxActivity = this;
+		
 		cBest = new Criteria();
 		cBest.setAccuracy(Criteria.ACCURACY_FINE);
-		cBest.setCostAllowed(false);
-		cBest.setSpeedRequired(false);
 		cBest.setAltitudeRequired(false);
 		cBest.setBearingRequired(false);
+		cBest.setCostAllowed(false);
+		cBest.setSpeedRequired(false);
 		
 		tvLocation = new TextView(this);
 		tvLocation.setHeight(40);
@@ -77,22 +80,36 @@ public class ActWaiterCall extends Activity implements OnClickListener, IUpdatab
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		
 		setContentView(rLL);
-		
-		//Location updater setup
-		thUpdater = new Waiter_LocationUpdaterThread(this);
 	}
 	
-	public void forceUpdate()
+	private void EnableGPS()
 	{
-		lcLast = lMan.getLastKnownLocation(lMan.getBestProvider(cBest, false));
+		String sProv = lMan.getBestProvider(cBest, false);
+		
+		if(!lMan.isProviderEnabled(sProv))
+		{
+			Intent intActGPS = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			startActivity(intActGPS);
+		}
+		
+		lMan.requestLocationUpdates(sProv, 5000, 1, this);
+		
+		lcLast = lMan.getLastKnownLocation(sProv);
 		locUpdHandler.sendEmptyMessage(0);
+	}
+	
+	private void DisableGPS()
+	{
+		lMan.removeUpdates(this);
 	}
 	
 	private Handler locUpdHandler = new Handler() {
 	        @Override
 	        public void handleMessage(Message msg) {
 	        	if(lcLast != null)
-	    			tvLocation.setText(lcLast.toString());
+	        	{
+	    			tvLocation.setText("Lat: " + lcLast.getLatitude() + "\nLon: " + lcLast.getLongitude());
+	        	}
 	    		else
 	    			tvLocation.setText("Unknown location");
 	        }
@@ -101,9 +118,6 @@ public class ActWaiterCall extends Activity implements OnClickListener, IUpdatab
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!thUpdater.isAlive())
-			thUpdater.start();
-			
 		
 		svPreview = new SurfaceView(this);
 		hPreview = svPreview.getHolder();
@@ -126,14 +140,12 @@ public class ActWaiterCall extends Activity implements OnClickListener, IUpdatab
 	
 	@Override
 	protected void onPause() {
-		thUpdater.interrupt();
 		stopPreview();
 		super.onPause();
 	}
 	
 	@Override
 	protected void onStop() {
-		thUpdater.interrupt();
 		stopPreview();
 		super.onStop();
 	}
@@ -142,12 +154,10 @@ public class ActWaiterCall extends Activity implements OnClickListener, IUpdatab
 	    super.onConfigurationChanged(newConfig);
 	}
 
-	//@Override
 	public void onClick(View arg0) {
-		//TODO Make the request to the waiter
 		if(cCamera != null)
 			cCamera.takePicture(null, mPictureCallback, mPictureCallback);
-		stopPreview();
+		//stopPreview();
 	}
 
 
@@ -183,6 +193,7 @@ public class ActWaiterCall extends Activity implements OnClickListener, IUpdatab
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		EnableGPS();
 	}
 	
 	public void stopPreview()
@@ -204,6 +215,7 @@ public class ActWaiterCall extends Activity implements OnClickListener, IUpdatab
 			cCamera = null;
 			rLL.removeViewAt(1);
 		}
+		DisableGPS();
 	}
 	
 	public void correctOrientation(int rotation) {
@@ -221,15 +233,33 @@ public class ActWaiterCall extends Activity implements OnClickListener, IUpdatab
 					FileOutputStream fRequestLoc = openFileOutput("awc_request_loc", Context.MODE_PRIVATE);
 					fRequestLoc.write(tvLocation.getText().toString().getBytes());
 					fRequestLoc.close();
-					
+					Toast.makeText(cxActivity, "Request sent!", 5).show();
 				} catch (FileNotFoundException e) {
-					//Silently fail
-					
+					//Fail!
+					Toast.makeText(cxActivity, "Unable to send the request!", 5).show();
 				} catch (IOException e) {
-					//Silently fail
+					//Fail!
+					Toast.makeText(cxActivity, "Unable to send the request!", 5).show();
 				}
 				
 			}
 		}
 	};
+
+	public void onLocationChanged(Location arg0) {
+		lcLast = arg0;
+		locUpdHandler.sendEmptyMessage(0);
+	}
+
+	public void onProviderDisabled(String provider) {
+		
+	}
+
+	public void onProviderEnabled(String provider) {
+		
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+
+	}
 }
