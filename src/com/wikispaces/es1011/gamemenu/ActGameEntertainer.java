@@ -173,12 +173,15 @@ public class ActGameEntertainer extends Activity implements
 			gs.setBallDirectionY(-2);
 		}
 
-		/*for (int j = 0; j < brickMatrix.getRow(); j++) {
+		for (int j = 0; j < brickMatrix.getRow(); j++) {
 			for (int i = 0; i < brickMatrix.getColumn(); i++) {
 				if (brickMatrix.getBrick(i, j).isVisible()
 						&& gs.getBallBox().intersect(
 								brickMatrix.getBrick(i, j).getBox())) {
-					brickMatrix.getBrick(i, j).Update(gs.getGameTime(), false);
+					brickMatrix.getBrick(i, j).setVisible(false);
+					brickMatrix.getBrick(i, j).setBox(new Rect(-1, -1, -1, -1));
+			
+		}
 
 					if (gs.getBallBox().intersect(
 							brickMatrix.getBrick(i, j).getBox().left,
@@ -199,7 +202,8 @@ public class ActGameEntertainer extends Activity implements
 				}
 
 			}
-		}*/
+
+
 
 		// TODO rimuovere dipendenza dal tempo di ball e pad
 		/*if (GameTime - mFrameTimer > speed) {

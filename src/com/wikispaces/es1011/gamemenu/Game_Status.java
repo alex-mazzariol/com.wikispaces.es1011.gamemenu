@@ -18,8 +18,9 @@ import android.graphics.Rect;
 	    private int padXPos;
 	    private int padYPos;
 	    private Rect padBox1, padBox2, padBox3, padBox4, padBox5;
-	    public int brickXmin, brickXmax, brickYmin, brickYmax;
+	    private int brickXmin, brickXmax, brickYmin, brickYmax;
 	    private Rect brickBox;
+	    private boolean brickVisible;
 
 	    public static enum Status {
 
@@ -228,6 +229,14 @@ import android.graphics.Rect;
 
 		public Rect getBrickBox() {
 			return brickBox;
+		}
+
+		public void setBrickVisible(boolean brickVisible) {
+			this.brickVisible = brickVisible;
+		}
+
+		public boolean isBrickVisible() {
+			return brickVisible;
 		}
 
 	}
