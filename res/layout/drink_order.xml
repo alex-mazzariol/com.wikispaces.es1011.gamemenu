@@ -6,36 +6,8 @@
     android:padding="10dp"
     android:orientation="vertical">
     
-    <LinearLayout
-    	android:id="@+android:id/uno"
-		android:orientation="horizontal"
-      	android:layout_width="fill_parent"
-      	android:layout_height="fill_parent"
-      	android:layout_weight="6">
-      	
-      	<TextView
-      		android:id="@+android:id/due"
-      		android:text="lista drink"
-      		android:gravity="center"
-          	android:background="#0aa000"
-          	android:layout_width="fill_parent"
-          	android:layout_height="fill_parent"
-          	android:layout_weight="1">
-      	</TextView>
-      	
-      	<Button
-      		android:id="@+android:id/tre" 
-      		android:layout_width="fill_parent"
-      		android:layout_height="fill_parent"
-      		android:layout_weight="3"
-      		android:text="button"
-      		android:gravity="center">
-      	</Button>
-      	
-    </LinearLayout>
-    
     <ListView
-    	android:id="@+android:id/quattro"
+    	android:id="@+android:id/riepilogo"
     	android:isScrollContainer="true"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
@@ -46,5 +18,33 @@
     	android:textSize="10sp"
     	>  
     </ListView>
+    
+    <LinearLayout
+    	android:id="@+android:id/sotto"
+		android:orientation="horizontal"
+      	android:layout_width="fill_parent"
+      	android:layout_height="fill_parent"
+      	android:layout_weight="6">
+      	
+      	<TextView
+      		android:id="@+android:id/testo"
+      		android:text="conferma ordine?"
+      		android:gravity="center"
+          	android:background="#0aa000"
+          	android:layout_width="fill_parent"
+          	android:layout_height="fill_parent"
+          	android:layout_weight="1">
+      	</TextView>
+      	
+      	<Button
+      		android:id="@+android:id/ok_button" 
+      		android:layout_width="fill_parent"
+      		android:layout_height="fill_parent"
+      		android:layout_weight="3"
+      		android:text="button"
+      		android:gravity="center">
+      	</Button>
+      	
+    </LinearLayout>
     
 </LinearLayout>
