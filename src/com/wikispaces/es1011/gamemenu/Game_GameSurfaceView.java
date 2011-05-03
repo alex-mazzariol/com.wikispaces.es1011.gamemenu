@@ -21,6 +21,7 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 	private Game_Pad pad;
 	private Game_BrickMatrix brickMatrix;
 	private Rect underRect;
+	
 
 	public Game_GameSurfaceView(Context context) {
 		super(context);
