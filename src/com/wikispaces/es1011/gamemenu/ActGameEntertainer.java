@@ -275,7 +275,7 @@ public class ActGameEntertainer extends Activity implements
 		 * Sposta gli sprite
 		 */
 		Rect ballTmp = gs.getBallBox();
-		ballTmp.set(ballTmp.left+gs.getBallDirectionX(), ballTmp.top+gs.getBallDirectionY(), ballTmp.right+gs.getBallDirectionX(), ballTmp.bottom++gs.getBallDirectionY())		
+		ballTmp.set(ballTmp.left+gs.getBallDirectionX(), ballTmp.top+gs.getBallDirectionY(), ballTmp.right+gs.getBallDirectionX(), ballTmp.bottom + gs.getBallDirectionY());		
 		gs.setBallBox(ballTmp);
 		
 		//Rect[] padBox =  gs.getPadBoxes();

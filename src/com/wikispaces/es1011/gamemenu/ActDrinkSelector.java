@@ -23,11 +23,14 @@ public class ActDrinkSelector extends Activity {
 		pgList, pgOrder, pgDetail
 	};
 
+	private Drink_Order doCurrent;
 	private ePage eBack;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		doCurrent = new Drink_Order(this);
+		
 		showPage(ePage.pgList);
 	}
 
@@ -51,6 +54,7 @@ public class ActDrinkSelector extends Activity {
 							showPage(ePage.pgList);
 						}
 					});
+			((LinearListView) findViewById(R.id.drink_riepilogo)).setAdapter(doCurrent);
 			// TODO Agganciare gli eventi della lista e dei bottoni
 			break;
 		case pgDetail:

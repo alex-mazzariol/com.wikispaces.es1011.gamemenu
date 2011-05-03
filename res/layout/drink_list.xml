@@ -8,15 +8,15 @@
 		android:orientation="horizontal" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_weight="6">
 
-		<TextView android:id="@+android:id/drink_headerpanel_label" android:text="lista drink"
-			android:gravity="center" android:background="#0aa000"
+		<TextView android:id="@+android:id/drink_headerpanel_label"
+			android:text="Order: 0" android:gravity="left" android:background="#000000"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
 			android:layout_weight="2">
 		</TextView>
 
 		<Button android:id="@+android:id/drink_headerpanel_btn_order"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:layout_weight="1" android:text="button" android:gravity="center">
+			android:layout_weight="1" android:text="Order" android:gravity="center">
 		</Button>
 
 	</LinearLayout>
@@ -24,7 +24,7 @@
 	<ListView android:id="@+android:id/drink_detail_list"
 		android:isScrollContainer="true" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_weight="1"
-		android:background="#0aaaa0" android:gravity="center" android:entries="@array/name_array"
+		android:background="#000000" android:gravity="center"
 		android:textSize="10sp">
 	</ListView>
 
