@@ -15,40 +15,54 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.*;
 import android.view.*;
 
 public class ActDrinkSelector extends Activity {
-	//Cursor mCursor;
+	private enum ePage {
+		pgList, pgOrder, pgDetail
+	};
+
+	private ePage eBack;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.drink_details);
-	        	        
-	    /*setContentView(R.layout.actdrinkselector);
 
-        GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this));
+		showPage(ePage.pgList);
+	}
 
-        gridview.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(ActDrinkSelector.this, "" + position, Toast.LENGTH_SHORT).show();
-            }
-        });*/
-		
-		
-        /*drinkList.setOnItemClickListener(new OnItemClickListener() {
-          public void onItemClick(AdapterView<?> parent, View view,
-              int position, long id) {
-            // When clicked, show a toast with the TextView text
-            Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-                Toast.LENGTH_SHORT).show();
-          }
-        });*/
-	        
-        /*ImageAdapter drinkList = new ImageAdapter(this);
-        // Bind to our new adapter.
-        setListAdapter(drinkList);*/
-		
-		
-    }
+	private void showPage(ePage Page) {
+		switch (Page) {
+		case pgList:
+			setContentView(R.layout.drink_list);
+			((Button) findViewById(R.id.drink_headerpanel_btn_order))
+					.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							showPage(ePage.pgOrder);
+						}
+					});
+			// TODO Agganciare gli eventi della lista
+			break;
+		case pgOrder:
+			setContentView(R.layout.drink_order);
+			((Button) findViewById(R.id.drink_btn_back_list))
+					.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							showPage(ePage.pgList);
+						}
+					});
+			// TODO Agganciare gli eventi della lista e dei bottoni
+			break;
+		case pgDetail:
+			setContentView(R.layout.drink_details);
+			// TODO Agganciare gli eventi dei bottoni +-
+			((Button) findViewById(R.id.drink_det_btn_back))
+					.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							showPage(eBack);
+						}
+					});
+			break;
+		}
+	}
 }
