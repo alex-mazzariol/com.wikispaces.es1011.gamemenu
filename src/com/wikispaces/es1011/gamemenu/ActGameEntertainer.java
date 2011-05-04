@@ -1,8 +1,5 @@
 package com.wikispaces.es1011.gamemenu;
 
-/**
- * TODO sistemare le viste
- */
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -19,7 +16,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ActGameEntertainer extends Activity implements
@@ -30,16 +26,15 @@ public class ActGameEntertainer extends Activity implements
 	private SensorManager mSensorManager;
 	private PowerManager mPowerManager;
 	private WindowManager mWindowManager;
-	private FrameLayout lGameFrame;
-
 	private Game_SurfaceThread thread;
 
 	private Game_Status gs;
 	private IGameSurface actuallyShownView;
 	private Game_GameSurfaceView gsw;
 	private Game_ReadySurfaceView rsw;
+	private Game_PauseSurfaceView psw;
+	private Game_LoseSurfaceView lsw;
 
-	private LinearLayout gameLayout;
 	private Sensor mAccelerometer;
 
 	private Game_Ball ball;
@@ -87,6 +82,8 @@ public class ActGameEntertainer extends Activity implements
 		gsw.getHolder().addCallback(this);
 		rsw = new Game_ReadySurfaceView(this, gs);
 		rsw.getHolder().addCallback(this);
+		lsw = new Game_LoseSurfaceView(this, gs);
+		lsw.getHolder().addCallback(this);
 
 		/**
 		 * Istanzio l'accelerometro
@@ -96,13 +93,13 @@ public class ActGameEntertainer extends Activity implements
 		mSensorManager.registerListener((SensorEventListener) this,
 				mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
 
-		lGameFrame = new FrameLayout(this);
+		new FrameLayout(this);
 		// lGameFrame.addView(rsw);
 		// lGameFrame.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 		// LayoutParams.FILL_PARENT));
-		actuallyShownView = rsw;
+		actuallyShownView = gsw;
 
-		gs.setState(Game_Status.Status.READY);
+		gs.setStatus(Game_Status.Status.RUNNING);
 
 		setContentView((View) actuallyShownView);
 	}
@@ -110,6 +107,8 @@ public class ActGameEntertainer extends Activity implements
 	@Override
 	public void onPause() {
 		super.onPause();
+		 gs.getBundle();
+		gs.setStatus(Game_Status.Status.PAUSE);
 
 	}
 
@@ -226,9 +225,9 @@ public class ActGameEntertainer extends Activity implements
 			ball = new Game_Ball(viewWidth, viewHeight, gsw, gs);
 			if (gs.getLives() > 0) {
 				gs.setLives(gs.getLives() - 1);
-			} else // TODO implementare lose:
+			} else 
 			{
-				gs.setState(Game_Status.Status.LOSE);
+				gs.setStatus(Game_Status.Status.LOSE);
 			}
 
 		}
@@ -275,7 +274,8 @@ public class ActGameEntertainer extends Activity implements
 		 * Sposta gli sprite
 		 */
 		Rect ballTmp = gs.getBallBox();
-		ballTmp.set(ballTmp.left+gs.getBallDirectionX(), ballTmp.top+gs.getBallDirectionY(), ballTmp.right+gs.getBallDirectionX(), ballTmp.bottom + gs.getBallDirectionY());		
+
+		ballTmp.set(ballTmp.left+gs.getBallDirectionX(), ballTmp.top+gs.getBallDirectionY(), ballTmp.right+gs.getBallDirectionX(), ballTmp.bottom + gs.getBallDirectionY());
 		gs.setBallBox(ballTmp);
 		
 		//Rect[] padBox =  gs.getPadBoxes();
@@ -288,16 +288,22 @@ public class ActGameEntertainer extends Activity implements
 		gs.setGameTime(System.currentTimeMillis());
 		update();
 
-		if (gs.getState() == Game_Status.Status.READY)
+		if (gs.getStatus() == Game_Status.Status.READY)
 			actuallyShownView = rsw;
 
-		if (gs.getState() == Game_Status.Status.RUNNING)
+		if (gs.getStatus() == Game_Status.Status.RUNNING)
 			actuallyShownView = gsw;
+		
+		if (gs.getStatus() == Game_Status.Status.PAUSE)
+			actuallyShownView = psw;
+
+		if (gs.getStatus() == Game_Status.Status.LOSE)
+			actuallyShownView = lsw;
 
 		actuallyShownView.viewUpdate();
 	}
 
-	// ----------------------------------------------------------------------------SurfaceHolder.Callback
+	// SurfaceHolder.Callback
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 

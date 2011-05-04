@@ -28,4 +28,3 @@ public class Game_SurfaceThread extends Thread {
         }
     }
 }
-
