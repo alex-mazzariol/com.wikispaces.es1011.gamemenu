@@ -4,17 +4,10 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.*;
 import android.view.*;
 
@@ -24,14 +17,15 @@ public class ActDrinkSelector extends Activity {
 	};
 
 	private Drink_Order doCurrent;
+	private Drink_OriginalList dlList;
 	private ePage eBack;
+	private Long iDrinkDetailID;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		doCurrent = new Drink_Order(this);
-		
-		showPage(ePage.pgList);
+		dlList = new Drink_OriginalList(this);
 	}
 
 	private void showPage(ePage Page) {
@@ -44,7 +38,21 @@ public class ActDrinkSelector extends Activity {
 							showPage(ePage.pgOrder);
 						}
 					});
-			// TODO Agganciare gli eventi della lista
+			ListView lvList = ((ListView) findViewById(R.id.drink_list_listview));
+			SimpleCursorAdapter dList = new SimpleCursorAdapter(this,
+					android.R.layout.simple_list_item_2, dlList.getDrinkList(),
+					new String[] { "d_name", "d_price" }, new int[] {
+							android.R.id.text1, android.R.id.text2 });
+			lvList.setAdapter(dList);
+			lvList.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View v,
+						int position, long id) {
+					iDrinkDetailID = id;
+					showPage(ePage.pgDetail);
+				}
+			});
+
+			eBack = ePage.pgList;
 			break;
 		case pgOrder:
 			setContentView(R.layout.drink_order);
@@ -54,8 +62,9 @@ public class ActDrinkSelector extends Activity {
 							showPage(ePage.pgList);
 						}
 					});
-			((LinearListView) findViewById(R.id.drink_riepilogo)).setAdapter(doCurrent);
+			LinearListView lvOrder = ((LinearListView) findViewById(R.id.drink_riepilogo));
 			// TODO Agganciare gli eventi della lista e dei bottoni
+			eBack = ePage.pgOrder;
 			break;
 		case pgDetail:
 			setContentView(R.layout.drink_details);
@@ -66,7 +75,23 @@ public class ActDrinkSelector extends Activity {
 							showPage(eBack);
 						}
 					});
+			//TODO Pescare i dati corretti!
+			((TextView) findViewById(R.id.drink_det_name))
+					.setText(iDrinkDetailID.toString());
 			break;
 		}
+	}
+
+	public void onPause() {
+		doCurrent.dbClose();
+		dlList.dbClose();
+		super.onPause();
+	}
+
+	public void onResume() {
+		super.onResume();
+		doCurrent.dbOpen();
+		dlList.dbOpen();
+		showPage(ePage.pgList);
 	}
 }

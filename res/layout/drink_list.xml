@@ -21,7 +21,7 @@
 
 	</LinearLayout>
 
-	<ListView android:id="@+android:id/drink_detail_list"
+	<ListView android:id="@+android:id/drink_list_listview"
 		android:isScrollContainer="true" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_weight="1"
 		android:background="#000000" android:gravity="center"
