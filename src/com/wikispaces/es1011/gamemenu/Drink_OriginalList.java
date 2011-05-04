@@ -71,4 +71,18 @@ public class Drink_OriginalList {
 				new String[] { "_id", "d_name", "d_price" }, null, null, null,
 				null, null);
 	}
+	
+	public int getListCount() {
+		Cursor mC = db.query("drink_list",
+				new String[] { "count(d_name) as d_tot" }, null, null, null, null,
+				null);
+
+		if (mC != null) {
+			mC.moveToFirst();
+			int i = mC.getInt(0);
+			mC.close();
+			return i;
+		} else
+			return 0;
+	}
 }

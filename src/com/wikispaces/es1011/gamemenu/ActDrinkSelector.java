@@ -39,11 +39,9 @@ public class ActDrinkSelector extends Activity {
 						}
 					});
 			ListView lvList = ((ListView) findViewById(R.id.drink_list_listview));
-			SimpleCursorAdapter dList = new SimpleCursorAdapter(this,
-					android.R.layout.simple_list_item_2, dlList.getDrinkList(),
-					new String[] { "d_name", "d_price" }, new int[] {
-							android.R.id.text1, android.R.id.text2 });
-			lvList.setAdapter(dList);
+			Drink_ImageListAdapter dListAdapter = new Drink_ImageListAdapter(
+					this, dlList.getListCount(), dlList.getDrinkList());
+			lvList.setAdapter(dListAdapter);
 			lvList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View v,
 						int position, long id) {
@@ -75,7 +73,7 @@ public class ActDrinkSelector extends Activity {
 							showPage(eBack);
 						}
 					});
-			//TODO Pescare i dati corretti!
+			// TODO Pescare i dati corretti!
 			((TextView) findViewById(R.id.drink_det_name))
 					.setText(iDrinkDetailID.toString());
 			break;

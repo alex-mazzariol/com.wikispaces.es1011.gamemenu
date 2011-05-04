@@ -83,7 +83,9 @@ public class Drink_Order {
 
 		if (mC != null) {
 			mC.moveToFirst();
-			return mC.getInt(0);
+			int i = mC.getInt(0);
+			mC.close();
+			return i;
 		} else {
 			return -1;
 		}
@@ -139,7 +141,23 @@ public class Drink_Order {
 
 		if (mC != null) {
 			mC.moveToFirst();
-			return mC.getInt(0);
+			int i = mC.getInt(0);
+			mC.close();
+			return i;
+		} else
+			return 0;
+	}
+	
+	public int getListCount() {
+		Cursor mC = db.query("drink_order",
+				new String[] { "count(d_qty) as d_tot" }, null, null, null, null,
+				null);
+
+		if (mC != null) {
+			mC.moveToFirst();
+			int i = mC.getInt(0);
+			mC.close();
+			return i;
 		} else
 			return 0;
 	}

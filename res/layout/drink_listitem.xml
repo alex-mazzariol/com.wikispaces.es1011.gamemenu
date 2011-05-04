@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="50dp"
+	android:orientation="horizontal" android:id="@+id/drink_listitem_lyt"
+	android:paddingTop="2dp"
+	android:paddingBottom="3dp">
+	<ImageView android:id="@+id/drink_listitem_img"
+		android:gravity="left" android:layout_width="wrap_content"
+		android:layout_height="fill_parent" />
+	<TextView android:id="@+id/drink_listitem_tx1"
+		android:gravity="left"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		style="android:attr/listItemFirstLineStyle" />
+	<TextView android:id="@+id/drink_listitem_tx2"
+		android:gravity="right"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+		style="android:attr/listItemFirstLineStyle" />
+</LinearLayout>
