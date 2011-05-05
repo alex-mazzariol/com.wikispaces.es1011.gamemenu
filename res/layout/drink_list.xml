@@ -4,17 +4,17 @@
 	android:layout_height="fill_parent" android:padding="10dp"
 	android:orientation="vertical">
 
-	<LinearLayout android:id="@+android:id/drink_headerpanel"
+	<LinearLayout android:id="@+android:id/drink_list_headerpanel"
 		android:orientation="horizontal" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_weight="6">
 
-		<TextView android:id="@+android:id/drink_headerpanel_label"
-			android:text="Order: 0" android:gravity="left" android:background="#000000"
+		<TextView android:id="@+android:id/drink_list_headerpanel_label"
+			android:gravity="left|center_vertical" android:background="#000000"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:layout_weight="2">
+			style="@android:style/TextAppearance.Medium" android:layout_weight="1">
 		</TextView>
 
-		<Button android:id="@+android:id/drink_headerpanel_btn_order"
+		<Button android:id="@+android:id/drink_list_headerpanel_btn_order"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
 			android:layout_weight="1" android:text="Order" android:gravity="center">
 		</Button>

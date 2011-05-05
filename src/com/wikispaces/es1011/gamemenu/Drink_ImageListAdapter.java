@@ -14,15 +14,14 @@ public class Drink_ImageListAdapter extends BaseAdapter {
 	private Cursor cur;
 	private int iLen;
 
-	public Drink_ImageListAdapter(Context cx, int len, Cursor c) {
+	public Drink_ImageListAdapter(Context cx, Cursor c) {
 		mC = cx;
 		cur = c;
-		iLen = len;
 	}
 
 	@Override
 	public int getCount() {
-		return iLen;
+		return cur.getCount();
 	}
 
 	@Override

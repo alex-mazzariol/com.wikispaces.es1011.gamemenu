@@ -10,7 +10,7 @@ public class Drink_OriginalList {
 
 	private class dbHelper extends SQLiteOpenHelper {
 		public dbHelper(Context c) {
-			super(c, "gamemenu", null, 1);
+			super(c, "drink_lst_db", null, 1);
 		}
 
 		private final String sLoremIpsum = "Lorem ipsum dolor sit amet, "
@@ -26,7 +26,6 @@ public class Drink_OriginalList {
 				+ "vel rhoncus dolor. Class aptent taciti sociosqu ad litora "
 				+ "torquent per conubia nostra, per inceptos himenaeos.";
 
-		@Override
 		public void onCreate(SQLiteDatabase db) {
 			db
 					.execSQL("create table drink_list (_id integer primary key, d_name text, d_price text, d_description text);");
@@ -41,7 +40,6 @@ public class Drink_OriginalList {
 			}
 		}
 
-		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("drop table if exists drink_list");
 			onCreate(db);
@@ -59,7 +57,6 @@ public class Drink_OriginalList {
 	public Drink_OriginalList dbOpen() {
 		dbh = new dbHelper(mCtx);
 		db = dbh.getWritableDatabase();
-		//dbh.onUpgrade(db, 0, 0);
 		return this;
 	}
 
@@ -72,11 +69,11 @@ public class Drink_OriginalList {
 				new String[] { "_id", "d_name", "d_price" }, null, null, null,
 				null, null);
 	}
-	
+
 	public int getListCount() {
 		Cursor mC = db.query("drink_list",
-				new String[] { "count(d_name) as d_tot" }, null, null, null, null,
-				null);
+				new String[] { "count(d_name) as d_tot" }, null, null, null,
+				null, null);
 
 		if (mC != null) {
 			mC.moveToFirst();
@@ -85,5 +82,47 @@ public class Drink_OriginalList {
 			return i;
 		} else
 			return 0;
+	}
+
+	public String getDrinkName(long drink_id) {
+		Cursor mC = db.query("drink_list", new String[] { "d_name" }, "_id="
+				+ drink_id, null, null, null, null);
+		
+		if(mC != null){
+			mC.moveToFirst();
+			String sRet = mC.getString(0);
+			mC.close();
+			return sRet;
+		}
+		else
+			return "";
+	}
+	
+	public String getDrinkPrice(long drink_id) {
+		Cursor mC = db.query("drink_list", new String[] { "d_price" }, "_id="
+				+ drink_id, null, null, null, null);
+		
+		if(mC != null){
+			mC.moveToFirst();
+			String sRet = mC.getString(0);
+			mC.close();
+			return sRet + " EUR";
+		}
+		else
+			return "";
+	}
+	
+	public String getDrinkLong(long drink_id){
+		Cursor mC = db.query("drink_list", new String[] { "d_description" }, "_id="
+				+ drink_id, null, null, null, null);
+		
+		if(mC != null){
+			mC.moveToFirst();
+			String sRet = mC.getString(0);
+			mC.close();
+			return sRet;
+		}
+		else
+			return "";
 	}
 }

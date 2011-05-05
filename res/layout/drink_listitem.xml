@@ -5,16 +5,19 @@
 	android:paddingTop="2dp"
 	android:paddingBottom="3dp">
 	<ImageView android:id="@+id/drink_listitem_img"
-		android:gravity="left" android:layout_width="wrap_content"
-		android:layout_height="fill_parent" />
+		android:gravity="left" android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:scaleType="center" />
 	<TextView android:id="@+id/drink_listitem_tx1"
-		android:gravity="left"
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
-		style="@android:style/TextAppearance.Medium" />
+		android:paddingLeft="3dp"
+		android:gravity="center_vertical|left"
+		style="@android:style/TextAppearance.Large" />
 	<TextView android:id="@+id/drink_listitem_tx2"
-		android:gravity="right"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		style="@android:style/TextAppearance.Medium" />
+		android:gravity="center_vertical|right"
+		android:paddingRight="3dp"
+		style="@android:style/TextAppearance.Large" />
 </LinearLayout>

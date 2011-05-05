@@ -10,7 +10,7 @@ public class Drink_Order {
 
 	private class dbHelper extends SQLiteOpenHelper {
 		public dbHelper(Context c) {
-			super(c, "gamemenu", null, 1);
+			super(c, "drink_order_db", null, 1);
 		}
 
 		@Override
@@ -52,7 +52,7 @@ public class Drink_Order {
 	 *            The identifier for the drink to add.
 	 * @return -1 if failed.
 	 */
-	private long insertItem(int drink_id, String d_name) {
+	private long insertItem(long drink_id, String d_name) {
 		// Automaticamente l'inserimento di un drink in un ordine
 		// significa inserire una riga con quantità 1
 		ContentValues cvData = new ContentValues();
@@ -77,11 +77,11 @@ public class Drink_Order {
 	 * @return The quantity associated with the drink_id. Returns -1 if no such
 	 *         row in table.
 	 */
-	private int getDrinkQuantity(int drink_id) {
+	private int getDrinkQuantity(long drink_id) {
 		Cursor mC = db.query("drink_order", new String[] { "d_qty" }, "_id="
 				+ drink_id, null, null, null, null);
 
-		if (mC != null) {
+		if (mC != null && mC.getCount() > 0) {
 			mC.moveToFirst();
 			int i = mC.getInt(0);
 			mC.close();
@@ -91,7 +91,7 @@ public class Drink_Order {
 		}
 	}
 
-	private long setDrinkQuantity(int drink_id, String d_name, int d_qty) {
+	private long setDrinkQuantity(long drink_id, String d_name, int d_qty) {
 		ContentValues cV = new ContentValues();
 		cV.put("_id", drink_id);
 		cV.put("d_qty", d_qty);
@@ -100,7 +100,7 @@ public class Drink_Order {
 		return db.update("drink_order", cV, "_id=" + drink_id, null);
 	}
 
-	public long drinkIncrement(int drink_id, String drink_name) {
+	public long drinkIncrement(long drink_id, String drink_name) {
 		int iActual = getDrinkQuantity(drink_id);
 
 		if (iActual < 0) {
@@ -117,7 +117,7 @@ public class Drink_Order {
 		}
 	}
 
-	public long drinkDecrement(int drink_id, String drink_name) {
+	public long drinkDecrement(long drink_id, String drink_name) {
 		int iActual = getDrinkQuantity(drink_id);
 
 		if (iActual > 0) {
@@ -131,7 +131,7 @@ public class Drink_Order {
 	}
 
 	public void orderClear() {
-
+		//TODO
 	}
 
 	public int getItemsCount() {
@@ -139,7 +139,7 @@ public class Drink_Order {
 				new String[] { "sum(d_qty) as d_tot" }, null, null, null, null,
 				null);
 
-		if (mC != null) {
+		if (mC != null && mC.getCount() > 0) {
 			mC.moveToFirst();
 			int i = mC.getInt(0);
 			mC.close();
@@ -153,7 +153,7 @@ public class Drink_Order {
 				new String[] { "count(d_qty) as d_tot" }, null, null, null, null,
 				null);
 
-		if (mC != null) {
+		if (mC != null && mC.getCount() > 0) {
 			mC.moveToFirst();
 			int i = mC.getInt(0);
 			mC.close();

@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+android:id/drink_details" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
-	
+
 	<LinearLayout android:id="@+android:id/drink_det_layout"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:padding="10dp" android:orientation="vertical">
@@ -46,24 +46,28 @@
 			android:orientation="horizontal" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:layout_weight="4">
 
-			<Button android:id="@+android:id/drink_det_btn_plus" android:clickable="true"
-				android:visibility="visible" android:background="@drawable/drink_btn_green"
-				android:layout_width="40dp" android:layout_height="40dp"
-				android:layout_weight="1" android:gravity="center">
-			</Button>
+			<ImageButton android:id="@+android:id/drink_det_btn_plus"
+				android:clickable="true" android:visibility="visible"
+				android:src="@drawable/drink_btn_green" android:layout_width="40dp"
+				android:layout_height="40dp" android:layout_weight="1"
+				android:gravity="center" android:layout_margin="3dp"
+				android:scaleType="centerInside"
+				android:background="@drawable/btn_greenbg" />
 
-			<Button android:id="@+android:id/drink_det_btn_minus" android:clickable="true"
-				android:visibility="visible" android:background="@drawable/drink_btn_red"
-				android:layout_width="40dp" android:layout_height="40dp"
-				android:layout_weight="1" android:gravity="center">
-			</Button>
+			<ImageButton android:id="@+android:id/drink_det_btn_minus"
+				android:clickable="true" android:visibility="visible"
+				android:src="@drawable/drink_btn_red" android:layout_width="40dp"
+				android:layout_height="40dp" android:layout_weight="1"
+				android:gravity="center" android:layout_margin="3dp"
+				android:scaleType="centerInside"
+				android:background="@drawable/btn_redbg" />
 
 		</LinearLayout>
 
-		<Button android:id="@+android:id/drink_det_btn_back" android:clickable="true"
-			android:visibility="visible" android:layout_width="fill_parent"
-			android:layout_height="40dp" android:layout_weight="4"
-			android:gravity="center" android:text="&lt;&lt; back">
+		<Button android:id="@+android:id/drink_det_btn_back"
+			android:clickable="true" android:visibility="visible"
+			android:layout_width="fill_parent" android:layout_height="40dp"
+			android:layout_weight="4" android:gravity="center" android:text="&lt;&lt; back">
 		</Button>
 
 	</LinearLayout>
