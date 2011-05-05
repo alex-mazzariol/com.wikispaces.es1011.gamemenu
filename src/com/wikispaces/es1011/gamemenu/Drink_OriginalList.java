@@ -59,6 +59,7 @@ public class Drink_OriginalList {
 	public Drink_OriginalList dbOpen() {
 		dbh = new dbHelper(mCtx);
 		db = dbh.getWritableDatabase();
+		//dbh.onUpgrade(db, 0, 0);
 		return this;
 	}
 

@@ -9,12 +9,12 @@
 		android:layout_height="fill_parent" />
 	<TextView android:id="@+id/drink_listitem_tx1"
 		android:gravity="left"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" 
-		style="android:attr/listItemFirstLineStyle" />
-	<TextView android:id="@+id/drink_listitem_tx2"
-		android:gravity="right"
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
-		style="android:attr/listItemFirstLineStyle" />
+		style="@android:style/TextAppearance.Medium" />
+	<TextView android:id="@+id/drink_listitem_tx2"
+		android:gravity="right"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		style="@android:style/TextAppearance.Medium" />
 </LinearLayout>

@@ -24,8 +24,8 @@ public class ActDrinkSelector extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		doCurrent = new Drink_Order(this);
-		dlList = new Drink_OriginalList(this);
+		doCurrent = new Drink_Order(this).dbOpen();
+		dlList = new Drink_OriginalList(this).dbOpen();
 	}
 
 	private void showPage(ePage Page) {
@@ -80,16 +80,8 @@ public class ActDrinkSelector extends Activity {
 		}
 	}
 
-	public void onPause() {
-		doCurrent.dbClose();
-		dlList.dbClose();
-		super.onPause();
-	}
-
 	public void onResume() {
 		super.onResume();
-		doCurrent.dbOpen();
-		dlList.dbOpen();
 		showPage(ePage.pgList);
 	}
 }

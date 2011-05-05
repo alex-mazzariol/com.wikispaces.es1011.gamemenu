@@ -12,8 +12,6 @@ import android.widget.TextView;
 public class Drink_ImageListAdapter extends BaseAdapter {
 	private Context mC;
 	private Cursor cur;
-	private String[] sFrom;
-	private int[] iTo;
 	private int iLen;
 
 	public Drink_ImageListAdapter(Context cx, int len, Cursor c) {
