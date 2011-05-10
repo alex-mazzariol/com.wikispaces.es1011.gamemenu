@@ -19,23 +19,19 @@ public class Drink_ImageListAdapter extends BaseAdapter {
 		cur = c;
 	}
 
-	@Override
 	public int getCount() {
 		return cur.getCount();
 	}
 
-	@Override
 	public Object getItem(int position) {
 		return null;
 	}
 
-	@Override
 	public long getItemId(int position) {
 		// Ai nostri fini, è sufficiente.
 		return position + 1;
 	}
 
-	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		LinearLayout vOut;

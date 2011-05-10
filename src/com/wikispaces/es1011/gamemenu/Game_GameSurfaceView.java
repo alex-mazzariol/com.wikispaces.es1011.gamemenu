@@ -49,9 +49,9 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 		 */
 		canvas.drawColor(Color.DKGRAY);
 		canvas.drawRect(underRect, rectPaint);
-		canvas.drawText("SCORE : " + gs.getScore(), 0, viewHeight, textPaint);
+		canvas.drawText("SCORE : " + gs.score, 0, viewHeight, textPaint);
 
-		for (int i = 0; i < gs.getLives(); i++) {
+		for (int i = 0; i < gs.lives; i++) {
 			canvas.drawBitmap(hearts, new Rect(hearts.getWidth(), hearts.getHeight(), viewWidth
 					- hearts.getWidth() * i, viewHeight - hearts.getHeight()), new Rect(hearts.getWidth(), hearts.getHeight(), viewWidth
 							- hearts.getWidth() * i, viewHeight - hearts.getHeight()), null);
