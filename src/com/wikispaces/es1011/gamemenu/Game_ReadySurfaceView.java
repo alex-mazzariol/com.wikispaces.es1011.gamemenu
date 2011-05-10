@@ -74,7 +74,7 @@ public class Game_ReadySurfaceView extends SurfaceView implements IGameSurface {
         } else {
 
             SystemClock.sleep(500);
-            gs.setStatus(Game_Status.Status.RUNNING);
+            gs.status = Game_Status.Status.RUNNING;
             j = 1;
             i = 1;
             k = 1;

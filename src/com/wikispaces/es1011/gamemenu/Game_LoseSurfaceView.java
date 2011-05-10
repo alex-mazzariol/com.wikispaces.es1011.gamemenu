@@ -26,7 +26,7 @@ public class Game_LoseSurfaceView extends SurfaceView implements IGameSurface {
 
 		textPaint.setColor(Color.BLUE);
 		textPaint.setTextSize(viewHeight / 10);
-		canvas.drawText("YOUR FINAL SCORE : " + gs.getScore(), 0, viewHeight,
+		canvas.drawText("YOUR FINAL SCORE : " + gs.score, 0, viewHeight,
 				textPaint);
 	}
 

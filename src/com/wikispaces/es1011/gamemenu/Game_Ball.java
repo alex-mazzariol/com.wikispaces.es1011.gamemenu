@@ -11,9 +11,10 @@ public class Game_Ball implements IGameDrawable {
 	private Bitmap ball;
 	private Game_Status gs;
 
+	//TODO Cancellare questa classe
 
 	public Game_Ball(int CanvasW, int CanvasH, SurfaceView sw, Game_Status gs) {
-
+/*
 		this.gs = gs;
 		ball = BitmapFactory.decodeResource(sw.getResources(),
 				R.drawable.game_sprite_ball);
@@ -21,11 +22,11 @@ public class Game_Ball implements IGameDrawable {
 		
 		
 		gs.setBallBox(new Rect(gs.getBallXPos(), gs.getBallYPos(), gs.getBallXPos()
-				+ ball.getWidth(), gs.getBallYPos() + ball.getHeight()));
+				+ ball.getWidth(), gs.getBallYPos() + ball.getHeight()));*/
 	}
 
 	public void draw(Canvas canvas) {
-		canvas.drawBitmap(ball,gs.getBallBox(),gs.getBallBox() , null);
+		//canvas.drawBitmap(ball,gs.getBallBox(),gs.getBallBox() , null);
 		
 	}
 

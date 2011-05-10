@@ -6,9 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.SurfaceView;
 
-public class Game_BrickMatrix implements IGameDrawable {
+public class Game_BrickMatrix {
 
-	private Brick[][] brickMatrix;
+	//TODO Cancellare questa classe
+	//private Brick[][] brickMatrix;
 	private int matrixRow, matrixColumn;
 	private int brickCount;
 	protected Bitmap brick1, brick2, brick3, brick4;
@@ -16,7 +17,7 @@ public class Game_BrickMatrix implements IGameDrawable {
 
 	public Game_BrickMatrix(int canvasW, int canvasH, SurfaceView sw,
 			int brickNum, Game_Status gs) {
-		this.gs = gs;
+		/*this.gs = gs;
 		this.brickCount = brickNum;
 
 		brick1 = BitmapFactory.decodeResource(sw.getResources(),
@@ -66,9 +67,9 @@ public class Game_BrickMatrix implements IGameDrawable {
 				}
 				random = new java.util.Random().nextInt(10);
 			}
-		}
+		}*/
 	}
-
+/*
 	public Brick getBrick(int row, int column) {
 		return brickMatrix[row][column];
 	}
@@ -102,8 +103,7 @@ public class Game_BrickMatrix implements IGameDrawable {
 		}
 	}
 
-	/*************************************************************************************************************/
-
+	
 	public class Brick {
 
 		
@@ -138,5 +138,5 @@ public class Game_BrickMatrix implements IGameDrawable {
 			gs.setBrickBox(rect);
 		}
 		
-	}
+	}*/
 }

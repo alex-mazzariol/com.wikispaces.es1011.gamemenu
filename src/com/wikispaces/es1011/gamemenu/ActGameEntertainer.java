@@ -1,6 +1,5 @@
 package com.wikispaces.es1011.gamemenu;
 
-
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
@@ -99,7 +98,8 @@ public class ActGameEntertainer extends Activity implements
 		// LayoutParams.FILL_PARENT));
 		actuallyShownView = gsw;
 
-		gs.setStatus(Game_Status.Status.RUNNING);
+		gs.load(savedInstanceState);
+		gs.status = Game_Status.Status.RUNNING;
 
 		setContentView((View) actuallyShownView);
 	}
@@ -107,9 +107,7 @@ public class ActGameEntertainer extends Activity implements
 	@Override
 	public void onPause() {
 		super.onPause();
-		 gs.getBundle();
-		gs.setStatus(Game_Status.Status.PAUSE);
-
+		gs.status = Game_Status.Status.PAUSE;
 	}
 
 	@Override
@@ -141,7 +139,7 @@ public class ActGameEntertainer extends Activity implements
 		if (event.sensor.getType() != Sensor.TYPE_ORIENTATION) {
 			return;
 		}
-		gs.setPadDirectionX((int) -event.values[2]);
+		gs.padDirectionX = (int) -event.values[2];
 	}
 
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
@@ -149,157 +147,114 @@ public class ActGameEntertainer extends Activity implements
 	}
 
 	private void update() {
-
-		Rect[] box = gs.getPadBoxes();
-		if (box[0].intersect(gs.getBallBox())) {
-			gs.setBallDirectionX(-4);
-			gs.setBallDirectionY(-2);
-		}
-		if (box[1].intersect(gs.getBallBox())) {
-			gs.setBallDirectionX(-3);
-			gs.setBallDirectionY(-2);
-		}
-		if (box[2].intersect(gs.getBallBox())) {
-			gs.setBallDirectionX(-5);
-			gs.setBallDirectionY(0);
-		}
-		if (box[3].intersect(gs.getBallBox())) {
-			gs.setBallDirectionX(3);
-			gs.setBallDirectionY(-2);
-		}
-		if (box[4].intersect(gs.getBallBox())) {
-			gs.setBallDirectionX(4);
-			gs.setBallDirectionY(-2);
-		}
-
-		for (int j = 0; j < brickMatrix.getRow(); j++) {
-			for (int i = 0; i < brickMatrix.getColumn(); i++) {
-				if (brickMatrix.getBrick(i, j).isVisible()
-						&& gs.getBallBox().intersect(
-								brickMatrix.getBrick(i, j).getBox())) {
-					brickMatrix.getBrick(i, j).setVisible(false);
-					brickMatrix.getBrick(i, j).setBox(new Rect(-1, -1, -1, -1));
-				}
-
-				if (gs.getBallBox().intersect(
-						brickMatrix.getBrick(i, j).getBox().left,
-						brickMatrix.getBrick(i, j).getBox().top,
-						brickMatrix.getBrick(i, j).getBox().left + 1,
-						brickMatrix.getBrick(i, j).getBox().bottom)
-						|| gs.getBallBox().intersect(
-								brickMatrix.getBrick(i, j).getBox().right - 1,
-								brickMatrix.getBrick(i, j).getBox().top,
-								brickMatrix.getBrick(i, j).getBox().right,
-								brickMatrix.getBrick(i, j).getBox().bottom)) {
-					gs.setBallDirectionX(-gs.getBallDirectionX());
-				} else {
-					gs.setBallDirectionY(-gs.getBallDirectionY());
-				}
-
-				gs.setScore(100);
-			}
-
-		}
-
-		// TODO rimuovere dipendenza dal tempo di ball e pad
 		/*
-		 * if (GameTime - mFrameTimer > speed) { mFrameTimer = GameTime;
+		 * Rect[] box = gs.getPadBoxes(); if (box[0].intersect(gs.getBallBox()))
+		 * { gs.setBallDirectionX(-4); gs.setBallDirectionY(-2); } if
+		 * (box[1].intersect(gs.getBallBox())) { gs.setBallDirectionX(-3);
+		 * gs.setBallDirectionY(-2); } if (box[2].intersect(gs.getBallBox())) {
+		 * gs.setBallDirectionX(-5); gs.setBallDirectionY(0); } if
+		 * (box[3].intersect(gs.getBallBox())) { gs.setBallDirectionX(3);
+		 * gs.setBallDirectionY(-2); } if (box[4].intersect(gs.getBallBox())) {
+		 * gs.setBallDirectionX(4); gs.setBallDirectionY(-2); }
+		 * 
+		 * for (int j = 0; j < brickMatrix.getRow(); j++) { for (int i = 0; i <
+		 * brickMatrix.getColumn(); i++) { if (brickMatrix.getBrick(i,
+		 * j).isVisible() && gs.getBallBox().intersect( brickMatrix.getBrick(i,
+		 * j).getBox())) { brickMatrix.getBrick(i, j).setVisible(false);
+		 * brickMatrix.getBrick(i, j).setBox(new Rect(-1, -1, -1, -1)); }
+		 * 
+		 * if (gs.getBallBox().intersect( brickMatrix.getBrick(i,
+		 * j).getBox().left, brickMatrix.getBrick(i, j).getBox().top,
+		 * brickMatrix.getBrick(i, j).getBox().left + 1, brickMatrix.getBrick(i,
+		 * j).getBox().bottom) || gs.getBallBox().intersect(
+		 * brickMatrix.getBrick(i, j).getBox().right - 1,
+		 * brickMatrix.getBrick(i, j).getBox().top, brickMatrix.getBrick(i,
+		 * j).getBox().right, brickMatrix.getBrick(i, j).getBox().bottom)) {
+		 * gs.setBallDirectionX(-gs.getBallDirectionX()); } else {
+		 * gs.setBallDirectionY(-gs.getBallDirectionY()); }
+		 * 
+		 * gs.setScore(100); }
+		 * 
+		 * }
+		 * 
+		 * // TODO rimuovere dipendenza dal tempo di ball e pad
+		 * 
+		 * if (gs.getBallXPos() <= 0) { gs.setBallXPos(1);
+		 * gs.setBallDirectionX(-gs.getBallDirectionX()); }
+		 * 
+		 * if (gs.getBallXPos() >= viewWidth - 1) { gs.setBallXPos(viewWidth -
+		 * 1); gs.setBallDirectionX(-gs.getBallDirectionX()); }
+		 * 
+		 * if (gs.getBallYPos() <= 0) { gs.setBallXPos(1);
+		 * gs.setBallDirectionY(-gs.getBallDirectionY()); }
+		 * 
+		 * if (gs.getBallYPos() >= viewHeight - gs.getBallBox().height()) { ball
+		 * = new Game_Ball(viewWidth, viewHeight, gsw, gs); if (gs.getLives() >
+		 * 0) { gs.setLives(gs.getLives() - 1); } else {
+		 * gs.setStatus(Game_Status.Status.LOSE); }
+		 * 
+		 * }
+		 * 
+		 * gs.setBallXPos(gs.getBallXPos() + gs.getBallDirectionX() %
+		 * viewWidth); gs.setBallYPos(gs.getBallYPos() + gs.getBallDirectionY()
+		 * % viewHeight); Rect newBox = new Rect(gs.getBallXPos(),
+		 * gs.getBallYPos(), gs.getBallXPos() + gs.getBallBox().width(),
+		 * gs.getBallBox() .height()); gs.setBallBox(newBox);
+		 * 
+		 * // if (GameTime - mFrameTimer > speed) { // mFrameTimer = GameTime;
+		 * final int padWidth = (gs.getPadBox1().width() +
+		 * gs.getPadBox2().width() + gs.getPadBox3().width() +
+		 * gs.getPadBox4().width() + gs .getPadBox5().width()); if
+		 * (gs.getPadXPos() <= 0 || gs.getPadXPos() >= viewWidth - padWidth) {
+		 * gs.setPadDirectionX(-gs.getPadDirectionX()); }
+		 * gs.setPadXPos(java.lang.Math.abs(gs.getPadXPos() +
+		 * gs.getPadDirectionX()) % viewWidth);
+		 * 
+		 * gs.setPadBox1(new Rect(gs.getPadXPos(), gs.getPadYPos(), gs
+		 * .getPadXPos() + padWidth * 1 / 5, gs.getPadYPos() + padWidth));
+		 * gs.setPadBox2(new Rect(gs.getPadXPos() + padWidth * 1 / 5, gs
+		 * .getPadYPos(), gs.getPadXPos() + padWidth * 2 / 5, gs .getPadYPos() +
+		 * padWidth)); gs.setPadBox3(new Rect(gs.getPadXPos() + padWidth * 2 /
+		 * 5, gs .getPadYPos(), gs.getPadXPos() + padWidth * 3 / 5, gs
+		 * .getPadYPos() + padWidth)); gs.setPadBox4(new Rect(gs.getPadXPos() +
+		 * padWidth * 3 / 5, gs .getPadYPos(), gs.getPadXPos() + padWidth * 4 /
+		 * 5, gs .getPadYPos() + padWidth)); gs.setPadBox1(new
+		 * Rect(gs.getPadXPos() + padWidth * 4 / 5, gs .getPadYPos(),
+		 * gs.getPadXPos() + padWidth, gs.getPadYPos() + padWidth));
+		 * 
+		 * Rect ballTmp = gs.getBallBox();
+		 * 
+		 * ballTmp.set(ballTmp.left + gs.getBallDirectionX(), ballTmp.top +
+		 * gs.getBallDirectionY(), ballTmp.right + gs.getBallDirectionX(),
+		 * ballTmp.bottom + gs.getBallDirectionY()); gs.setBallBox(ballTmp);
+		 * 
+		 * // Rect[] padBox = gs.getPadBoxes(); // foreach()
+		 * 
+		 * gs.setPadDirectionX(0);
 		 */
-
-		if (gs.getBallXPos() <= 0) {
-			gs.setBallXPos(1);
-			gs.setBallDirectionX(-gs.getBallDirectionX());
-		}
-
-		if (gs.getBallXPos() >= viewWidth - 1) {
-			gs.setBallXPos(viewWidth - 1);
-			gs.setBallDirectionX(-gs.getBallDirectionX());
-		}
-
-		if (gs.getBallYPos() <= 0) {
-			gs.setBallXPos(1);
-			gs.setBallDirectionY(-gs.getBallDirectionY());
-		}
-
-		if (gs.getBallYPos() >= viewHeight - gs.getBallBox().height()) {
-			ball = new Game_Ball(viewWidth, viewHeight, gsw, gs);
-			if (gs.getLives() > 0) {
-				gs.setLives(gs.getLives() - 1);
-			} else 
-			{
-				gs.setStatus(Game_Status.Status.LOSE);
-			}
-
-		}
-
-		gs.setBallXPos(gs.getBallXPos() + gs.getBallDirectionX() % viewWidth);
-		gs.setBallYPos(gs.getBallYPos() + gs.getBallDirectionY() % viewHeight);
-		Rect newBox = new Rect(gs.getBallXPos(), gs.getBallYPos(), gs
-				.getBallXPos()
-				+ gs.getBallBox().width(), gs.getBallBox().height());
-		gs.setBallBox(newBox);
-
-		// if (GameTime - mFrameTimer > speed) {
-		// mFrameTimer = GameTime;
-		final int padWidth = (gs.getPadBox1().width() + gs.getPadBox2().width()
-				+ gs.getPadBox3().width() + gs.getPadBox4().width() + gs
-				.getPadBox5().width());
-		if (gs.getPadXPos() <= 0 || gs.getPadXPos() >= viewWidth - padWidth) {
-			gs.setPadDirectionX(-gs.getPadDirectionX());
-		}
-		gs.setPadXPos(java.lang.Math.abs(gs.getPadXPos()
-				+ gs.getPadDirectionX())
-				% viewWidth);
-
-		gs.setPadBox1(new Rect(gs.getPadXPos(), gs.getPadYPos(), gs
-				.getPadXPos()
-				+ padWidth * 1 / 5, gs.getPadYPos() + padWidth));
-		gs.setPadBox2(new Rect(gs.getPadXPos() + padWidth * 1 / 5, gs
-				.getPadYPos(), gs.getPadXPos() + padWidth * 2 / 5, gs
-				.getPadYPos()
-				+ padWidth));
-		gs.setPadBox3(new Rect(gs.getPadXPos() + padWidth * 2 / 5, gs
-				.getPadYPos(), gs.getPadXPos() + padWidth * 3 / 5, gs
-				.getPadYPos()
-				+ padWidth));
-		gs.setPadBox4(new Rect(gs.getPadXPos() + padWidth * 3 / 5, gs
-				.getPadYPos(), gs.getPadXPos() + padWidth * 4 / 5, gs
-				.getPadYPos()
-				+ padWidth));
-		gs.setPadBox1(new Rect(gs.getPadXPos() + padWidth * 4 / 5, gs
-				.getPadYPos(), gs.getPadXPos() + padWidth, gs.getPadYPos()
-				+ padWidth));
-
-		/**
-		 * Sposta gli sprite
-		 */
-		Rect ballTmp = gs.getBallBox();
-
-		ballTmp.set(ballTmp.left+gs.getBallDirectionX(), ballTmp.top+gs.getBallDirectionY(), ballTmp.right+gs.getBallDirectionX(), ballTmp.bottom + gs.getBallDirectionY());
-		gs.setBallBox(ballTmp);
-		
-		//Rect[] padBox =  gs.getPadBoxes();
-		//foreach()
-		
-		gs.setPadDirectionX(0);
 	}
 
 	public void forceUpdate() {
-		gs.setGameTime(System.currentTimeMillis());
+		gs.GameTime = System.currentTimeMillis();
 		update();
 
-		if (gs.getStatus() == Game_Status.Status.READY)
+		switch (gs.status) {
+		case READY:
 			actuallyShownView = rsw;
+			break;
 
-		if (gs.getStatus() == Game_Status.Status.RUNNING)
+		case RUNNING:
 			actuallyShownView = gsw;
-		
-		if (gs.getStatus() == Game_Status.Status.PAUSE)
+			break;
+
+		case PAUSE:
 			actuallyShownView = psw;
+			break;
 
-		if (gs.getStatus() == Game_Status.Status.LOSE)
+		case LOSE:
 			actuallyShownView = lsw;
-
+			break;
+		}
 		actuallyShownView.viewUpdate();
 	}
 
