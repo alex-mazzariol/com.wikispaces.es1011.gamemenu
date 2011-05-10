@@ -10,66 +10,81 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.LinearLayout;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class LinearListView extends LinearLayout {
 	Adapter adapter;
-    Observer observer = new Observer(this);
+	Observer observer = new Observer(this);
+	OnItemClickListener oAction = null;
 
-    public LinearListView(Context context)
-    {
-        super(context);
-    }
+	public LinearListView(Context context) {
+		super(context);
+	}
 
-    public LinearListView(Context context, AttributeSet attrs)
-    {
-        super(context, attrs);
-    }
+	public LinearListView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
-    public void setAdapter(Adapter adapter)
-    {
-        if (this.adapter != null)
-            this.adapter.unregisterDataSetObserver(observer);
+	public void setOnItemClickListener(OnItemClickListener oAct) {
+		oAction = oAct;
+	}
 
-        this.adapter = adapter;
-        adapter.registerDataSetObserver(observer);
-        observer.onChanged();
-    }
+	public void setAdapter(Adapter adapter) {
+		if (this.adapter != null)
+			this.adapter.unregisterDataSetObserver(observer);
 
-    private class Observer extends DataSetObserver
-    {
-        LinearListView context;
+		this.adapter = adapter;
+		adapter.registerDataSetObserver(observer);
+		observer.onChanged();
+	}
 
-        public Observer(LinearListView context)
-        {
-            this.context = context;
-        }
+	private class Observer extends DataSetObserver {
+		LinearListView context;
 
-        @Override
-        public void onChanged()
-        {
-            List<View> oldViews = new ArrayList<View>(context.getChildCount());
+		public Observer(LinearListView context) {
+			this.context = context;
+		}
 
-            for (int i = 0; i < context.getChildCount(); i++)
-                oldViews.add(context.getChildAt(i));
+		@Override
+		public void onChanged() {
+			List<View> oldViews = new ArrayList<View>(context.getChildCount());
 
-            Iterator<View> iter = oldViews.iterator();
+			for (int i = 0; i < context.getChildCount(); i++)
+				oldViews.add(context.getChildAt(i));
 
-            context.removeAllViews();
+			Iterator<View> iter = oldViews.iterator();
 
-            for (int i = 0; i < context.adapter.getCount(); i++)
-            {
-                View convertView = iter.hasNext() ? iter.next() : null;
-                context.addView(context.adapter.getView(i, convertView, context));
-            }
-            super.onChanged();
-        }
+			context.removeAllViews();
 
-        @Override
-        public void onInvalidated()
-        {
-            context.removeAllViews();
-            super.onInvalidated();
-        }
-    }
+			for (int i = 0; i < context.adapter.getCount(); i++) {
+				View convertView = iter.hasNext() ? iter.next() : null;
+				View vRes = context.adapter.getView(i, convertView, context);
+				vRes
+						.setOnClickListener((OnClickListener) new ParameterizedOnClickListener(
+								i, context));
+				context.addView(vRes);
+			}
+			super.onChanged();
+		}
 
+		@Override
+		public void onInvalidated() {
+			context.removeAllViews();
+			super.onInvalidated();
+		}
+	}
+
+	private class ParameterizedOnClickListener {
+		private LinearListView cTx;
+		private int iPos;
+
+		public ParameterizedOnClickListener(int i, LinearListView c) {
+			iPos = i;
+			cTx = c;
+		}
+
+		public void onClick(View v) {
+			oAction.onItemClick(null, null, iPos, cTx.adapter.getItemId(iPos));
+		}
+	}
 }

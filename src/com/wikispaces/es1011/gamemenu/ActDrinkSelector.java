@@ -64,7 +64,13 @@ public class ActDrinkSelector extends Activity {
 			Drink_ImageListAdapter dOrderAdapter = new Drink_ImageListAdapter(
 					this, doCurrent.getOrderList());
 			lvOrder.setAdapter(dOrderAdapter);
-
+			
+			lvOrder.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View v,
+						int position, long id) {
+					
+				}
+			});
 			eBack = ePage.pgOrder;
 			break;
 		case pgDetail:
