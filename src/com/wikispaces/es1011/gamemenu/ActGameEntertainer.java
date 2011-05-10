@@ -255,7 +255,8 @@ public class ActGameEntertainer extends Activity implements
 			actuallyShownView = lsw;
 			break;
 		}
-		actuallyShownView.viewUpdate();
+		if(actuallyShownView != null)
+			actuallyShownView.viewUpdate();
 	}
 
 	// SurfaceHolder.Callback

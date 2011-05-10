@@ -49,6 +49,9 @@ public class Game_Status {
 	}
 
 	public void load(Bundle bundle) {
+		if(bundle == null)
+			return;
+		
 		lives = bundle.getInt("lives");
 		score = bundle.getInt("score");
 		ballDirectionX = bundle.getInt("ballDirectionX");
