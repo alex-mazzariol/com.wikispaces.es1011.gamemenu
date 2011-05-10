@@ -143,7 +143,6 @@ public class ActGameEntertainer extends Activity implements
 	}
 
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// TODO Auto-generated method stub
 	}
 
 	private void update() {

@@ -131,7 +131,7 @@ public class Drink_Order {
 	}
 
 	public void orderClear() {
-		//TODO
+		db.execSQL("delete from drink_order");
 	}
 
 	public int getItemsCount() {
@@ -162,8 +162,8 @@ public class Drink_Order {
 			return 0;
 	}
 
-	public double getOrderTotal() {
+	public String getOrderTotal() {
 		// TODO
-		return 0.0;
+		return "0.0 EUR";
 	}
 }

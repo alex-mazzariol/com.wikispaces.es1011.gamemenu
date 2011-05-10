@@ -54,7 +54,7 @@ public class ActDrinkSelector extends Activity {
 			break;
 		case pgOrder:
 			setContentView(R.layout.drink_order);
-			((Button) findViewById(R.id.drink_btn_back_list))
+			((Button) findViewById(R.id.drink_order_btn_back))
 					.setOnClickListener(new View.OnClickListener() {
 						public void onClick(View v) {
 							showPage(ePage.pgList);
@@ -64,13 +64,37 @@ public class ActDrinkSelector extends Activity {
 			Drink_ImageListAdapter dOrderAdapter = new Drink_ImageListAdapter(
 					this, doCurrent.getOrderList());
 			lvOrder.setAdapter(dOrderAdapter);
-			
+
 			lvOrder.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View v,
 						int position, long id) {
-					
+					iDrinkDetailID = id;
+					showPage(ePage.pgDetail);
 				}
 			});
+
+			((TextView) findViewById(R.id.drink_order_lbl_totdrink))
+					.setText(Integer.toString(doCurrent.getItemsCount()));
+			((TextView) findViewById(R.id.drink_order_lbl_totcash))
+					.setText(doCurrent.getOrderTotal());
+			((Button) findViewById(R.id.drink_order_btn_clear))
+					.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
+							doCurrent.orderClear();
+							Toast.makeText(v.getContext(), "Order cleared!", 3)
+									.show();
+							showPage(ePage.pgOrder);
+						}
+					});
+			((Button) findViewById(R.id.drink_order_btn_send))
+					.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
+							doCurrent.orderClear();
+							Toast.makeText(v.getContext(), "Order sent!", 3)
+									.show();
+							showPage(ePage.pgOrder);
+						}
+					});
 			eBack = ePage.pgOrder;
 			break;
 		case pgDetail:

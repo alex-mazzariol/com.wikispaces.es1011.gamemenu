@@ -12,13 +12,17 @@ import android.widget.TextView;
 public class Drink_ImageListAdapter extends BaseAdapter {
 	private Context mC;
 	private Cursor cur;
-	private int iLen;
-
+	
 	public Drink_ImageListAdapter(Context cx, Cursor c) {
 		mC = cx;
 		cur = c;
 	}
 
+	protected void finalize()
+	{
+		cur.close();
+	}
+	
 	public int getCount() {
 		return cur.getCount();
 	}
