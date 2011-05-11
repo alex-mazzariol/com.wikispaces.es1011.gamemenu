@@ -32,12 +32,12 @@ public class ActGameEntertainer extends Activity implements
 	private Game_GameSurfaceView gsw;
 	private Game_ReadySurfaceView rsw;
 	private Game_PauseSurfaceView psw;
-	private Game_LoseSurfaceView lsw;
+	private Game_PauseSurfaceView lsw;
 
 	private Sensor mAccelerometer;
 
-	private Game_Ball ball;
-	private Game_Pad pad;
+	//private Game_Ball ball;
+	//private Game_Pad pad;
 	private Game_BrickMatrix brickMatrix;
 	private Rect underRect;
 	private int viewHeight, viewWidth;
@@ -81,7 +81,7 @@ public class ActGameEntertainer extends Activity implements
 		gsw.getHolder().addCallback(this);
 		rsw = new Game_ReadySurfaceView(this, gs);
 		rsw.getHolder().addCallback(this);
-		lsw = new Game_LoseSurfaceView(this, gs);
+		lsw = new Game_PauseSurfaceView(this, gs);
 		lsw.getHolder().addCallback(this);
 
 		/**
@@ -96,10 +96,10 @@ public class ActGameEntertainer extends Activity implements
 		// lGameFrame.addView(rsw);
 		// lGameFrame.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 		// LayoutParams.FILL_PARENT));
-		actuallyShownView = gsw;
+		actuallyShownView = rsw;
 
 		gs.load(savedInstanceState);
-		gs.status = Game_Status.Status.RUNNING;
+		gs.status = Game_Status.Status.READY;
 
 		setContentView((View) actuallyShownView);
 	}
@@ -122,6 +122,7 @@ public class ActGameEntertainer extends Activity implements
 
 	@Override
 	protected void onResume() {
+		gs.status = Game_Status.Status.READY;
 		super.onResume();
 	}
 
@@ -258,7 +259,6 @@ public class ActGameEntertainer extends Activity implements
 			actuallyShownView.viewUpdate();
 	}
 
-	// SurfaceHolder.Callback
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 
@@ -271,12 +271,12 @@ public class ActGameEntertainer extends Activity implements
 		if(actuallyShownView != null)
 			actuallyShownView.initDimension(viewWidth, viewHeight);
 
-		if (ball == null)
+		/*if (ball == null)
 			ball = new Game_Ball(viewWidth, viewHeight, gsw, gs);
 
 		if (pad == null)
 			pad = new Game_Pad(viewWidth, viewHeight, gsw, gs);
-
+*/
 		if (brickMatrix == null)
 			brickMatrix = new Game_BrickMatrix(viewWidth, viewHeight, gsw,
 					brickNum, gs);
@@ -286,8 +286,8 @@ public class ActGameEntertainer extends Activity implements
 					viewHeight);
 
 		if (actuallyShownView instanceof Game_GameSurfaceView) {
-			((Game_GameSurfaceView) actuallyShownView).initSprites(gs, ball,
-					pad, brickMatrix, underRect);
+			((Game_GameSurfaceView) actuallyShownView).initSprites(gs,/* ball,
+					pad,*/ brickMatrix, underRect);
 		}
 
 		thread.setRunning(true);

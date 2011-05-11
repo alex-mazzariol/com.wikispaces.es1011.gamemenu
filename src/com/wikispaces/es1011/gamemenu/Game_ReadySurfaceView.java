@@ -12,77 +12,86 @@ import android.os.SystemClock;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-
 public class Game_ReadySurfaceView extends SurfaceView implements IGameSurface {
 
 	private int viewWidth;
 	private int viewHeight;
 	private Game_Status gs;
 	private Bitmap one, two, three, go;
-	private int j,i,k;
+	private int j, i, k;
 	private boolean flag;
 	private Rect rect;
-	
+
 	public Game_ReadySurfaceView(Context context, Game_Status gs) {
 		super(context);
-		this.gs=gs;
-		one = BitmapFactory.decodeResource(getResources(),
-				R.drawable.game_one);
-		two = BitmapFactory.decodeResource(getResources(),
-				R.drawable.game_two);
+		this.gs = gs;
+		one = BitmapFactory.decodeResource(getResources(), R.drawable.game_one);
+		two = BitmapFactory.decodeResource(getResources(), R.drawable.game_two);
 		three = BitmapFactory.decodeResource(getResources(),
 				R.drawable.game_three);
-		go = BitmapFactory.decodeResource(getResources(),
-				R.drawable.game_go);
+		go = BitmapFactory.decodeResource(getResources(), R.drawable.game_go);
 	}
 
-	public void onDraw(Canvas canvas){
+	public void onDraw(Canvas canvas) {
 		if (j < 5) {
-            canvas.drawColor(Color.BLACK);
-            one = Bitmap.createScaledBitmap(one, one.getWidth() / 2, one.getHeight() / 2, true);
-            rect = new Rect(viewWidth/2-one.getWidth()/2, viewHeight/2-one.getHeight()/2, viewWidth/2 + one.getWidth()/2, viewHeight/2 +one.getHeight()/2);
-            canvas.drawBitmap(one, rect, rect, null); 
-            
-            SystemClock.sleep(100);
-            j++;
-        } else if (i < 5) {
+			canvas.drawColor(Color.BLACK);
+			one = Bitmap.createScaledBitmap(one, one.getWidth() / 2 + 1,
+					one.getHeight() / 2 + 1, true);
+			rect = new Rect(viewWidth / 2 - one.getWidth() / 2, viewHeight / 2
+					- one.getHeight() / 2, viewWidth / 2 + one.getWidth() / 2,
+					viewHeight / 2 + one.getHeight() / 2);
+			canvas.drawBitmap(one, rect, rect, null);
 
-            canvas.drawColor(Color.BLACK);
-            two = Bitmap.createScaledBitmap(two, two.getWidth() / 2, two.getHeight() / 2, true);
-            rect = new Rect(viewWidth/2-two.getWidth()/2, viewHeight/2-two.getHeight()/2, viewWidth/2 + two.getWidth()/2, viewHeight/2 +two.getHeight()/2);
-            canvas.drawBitmap(two, rect, rect, null); 
-            SystemClock.sleep(100);
-            i++;
-        } else if (k < 5) {
+			SystemClock.sleep(100);
+			j++;
+		} else if (i < 5) {
 
-            canvas.drawColor(Color.BLACK);
-            three = Bitmap.createScaledBitmap(three, three.getWidth() / 2, three.getHeight() / 2, true);
-            rect = new Rect(viewWidth/2-three.getWidth()/2, viewHeight/2-three.getHeight()/2, viewWidth/2 + three.getWidth()/2, viewHeight/2 +three.getHeight()/2);
-            canvas.drawBitmap(three, rect, rect, null); 
-            SystemClock.sleep(100);
-            k++;
+			canvas.drawColor(Color.BLACK);
+			two = Bitmap.createScaledBitmap(two, two.getWidth() / 2 + 1,
+					two.getHeight() / 2 + 1, true);
+			rect = new Rect(viewWidth / 2 - two.getWidth() / 2, viewHeight / 2
+					- two.getHeight() / 2, viewWidth / 2 + two.getWidth() / 2,
+					viewHeight / 2 + two.getHeight() / 2);
+			canvas.drawBitmap(two, rect, rect, null);
+			SystemClock.sleep(100);
+			i++;
+		} else if (k < 5) {
 
-        } else if (flag) {
+			canvas.drawColor(Color.BLACK);
+			three = Bitmap.createScaledBitmap(three, three.getWidth() / 2 + 1,
+					three.getHeight() / 2 + 1, true);
+			rect = new Rect(viewWidth / 2 - three.getWidth() / 2, viewHeight
+					/ 2 - three.getHeight() / 2, viewWidth / 2
+					+ three.getWidth() / 2, viewHeight / 2 + three.getHeight()
+					/ 2);
+			canvas.drawBitmap(three, rect, rect, null);
+			SystemClock.sleep(100);
+			k++;
 
-            go = Bitmap.createScaledBitmap(go, go.getWidth()/2, go.getHeight()/2, true);
-            
-            rect = new Rect(viewWidth/2-go.getWidth()/2, viewHeight/2-go.getHeight()/2, viewWidth/2 + go.getWidth()/2, viewHeight/2 +go.getHeight()/2);
-            canvas.drawBitmap(go, rect, rect, null); 
-            
-            flag = false;
+		} else if (flag) {
 
-        } else {
+			go = Bitmap.createScaledBitmap(go, go.getWidth() / 2 + 1,
+					go.getHeight() / 2 + 1, true);
 
-            SystemClock.sleep(500);
-            gs.status = Game_Status.Status.RUNNING;
-            j = 1;
-            i = 1;
-            k = 1;
-            flag = true;
-        }
-				
+			rect = new Rect(viewWidth / 2 - go.getWidth() / 2, viewHeight / 2
+					- go.getHeight() / 2, viewWidth / 2 + go.getWidth() / 2,
+					viewHeight / 2 + go.getHeight() / 2);
+			canvas.drawBitmap(go, rect, rect, null);
+
+			flag = false;
+
+		} else {
+
+			SystemClock.sleep(500);
+			gs.status = Game_Status.Status.RUNNING;
+			j = 1;
+			i = 1;
+			k = 1;
+			flag = true;
+		}
+
 	}
-	
+
 	public void viewUpdate() {
 		viewUpdateHandler.sendEmptyMessage(0);
 	}
@@ -93,7 +102,7 @@ public class Game_ReadySurfaceView extends SurfaceView implements IGameSurface {
 			Canvas c = null;
 			SurfaceHolder sH = getHolder();
 			try {
-				
+
 				c = sH.lockCanvas(null);
 				synchronized (sH) {
 					onDraw(c);
@@ -105,7 +114,6 @@ public class Game_ReadySurfaceView extends SurfaceView implements IGameSurface {
 			}
 		}
 	};
-	
 
 	public void initDimension(int width, int height) {
 

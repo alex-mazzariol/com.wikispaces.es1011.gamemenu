@@ -17,8 +17,8 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 	private Game_Status gs;
 	private Bitmap hearts;
 	private int viewHeight, viewWidth;
-	private Game_Ball ball;
-	private Game_Pad pad;
+	//private Game_Ball ball;
+	//private Game_Pad pad;
 	private Game_BrickMatrix brickMatrix;
 	private Rect underRect;
 	
@@ -57,8 +57,8 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 							- hearts.getWidth() * i, viewHeight - hearts.getHeight()), null);
 		}
 
-		ball.draw(canvas);
-		pad.draw(canvas);
+		//ball.draw(canvas);
+		//pad.draw(canvas);
 		/*for (int j = 0; j < brickMatrix.getRow(); j++) {
 			for (int i = 0; i < brickMatrix.getColumn(); i++) {
 				if (brickMatrix.getBrick(i, j).isVisible()) {
@@ -99,11 +99,11 @@ public class Game_GameSurfaceView extends SurfaceView implements IGameSurface {
 	}
 	
 	public void initSprites(Game_Status gs, 
-			Game_Ball ball, Game_Pad pad, Game_BrickMatrix brickMatrix,
+			/*Game_Ball ball, Game_Pad pad,*/ Game_BrickMatrix brickMatrix,
 			Rect underRect){
 		this.gs = gs;
-		this.ball = ball;
-		this.pad = pad;
+		//this.ball = ball;
+		//this.pad = pad;
 		this.brickMatrix = brickMatrix;
 		this.underRect = underRect;
 	}
