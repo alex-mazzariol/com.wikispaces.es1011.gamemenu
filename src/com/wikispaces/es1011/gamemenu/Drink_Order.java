@@ -15,8 +15,7 @@ public class Drink_Order {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db
-					.execSQL("create table drink_order (_id integer primary key, d_name text, d_qty integer not null);");
+			db.execSQL("create table drink_order (_id integer primary key, d_price text, d_name text, d_qty integer not null);");
 		}
 
 		@Override
@@ -52,13 +51,14 @@ public class Drink_Order {
 	 *            The identifier for the drink to add.
 	 * @return -1 if failed.
 	 */
-	private long insertItem(long drink_id, String d_name) {
+	private long insertItem(long drink_id, String d_name, double dPrice) {
 		// Automaticamente l'inserimento di un drink in un ordine
 		// significa inserire una riga con quantità 1
 		ContentValues cvData = new ContentValues();
 		cvData.put("_id", drink_id);
 		cvData.put("d_qty", 1);
 		cvData.put("d_name", d_name);
+		cvData.put("d_price", dPrice);
 
 		return db.insert("drink_order", null, cvData);
 	}
@@ -100,12 +100,12 @@ public class Drink_Order {
 		return db.update("drink_order", cV, "_id=" + drink_id, null);
 	}
 
-	public long drinkIncrement(long drink_id, String drink_name) {
+	public long drinkIncrement(long drink_id, String drink_name, double d_price) {
 		int iActual = getDrinkQuantity(drink_id);
 
 		if (iActual < 0) {
 			// Bisogna aggiungere la riga
-			if (insertItem(drink_id, drink_name) < 0)
+			if (insertItem(drink_id, drink_name, d_price) < 0)
 				return 0;
 			else
 				return 1;
@@ -120,14 +120,23 @@ public class Drink_Order {
 	public long drinkDecrement(long drink_id, String drink_name) {
 		int iActual = getDrinkQuantity(drink_id);
 
-		if (iActual > 0) {
+		if (iActual > 1) {
 			if (setDrinkQuantity(drink_id, drink_name, iActual - 1) < 0)
+				return iActual;
+			else
+				return iActual - 1;
+		} else if (iActual == 1) {
+			if (deleteOrder(drink_id) < 0)
 				return iActual;
 			else
 				return iActual - 1;
 		}
 
 		return iActual;
+	}
+
+	private int deleteOrder(long drink_id) {
+		return db.delete("drink_order", "_id=" + drink_id, null);
 	}
 
 	public void orderClear() {
@@ -147,11 +156,11 @@ public class Drink_Order {
 		} else
 			return 0;
 	}
-	
+
 	public int getListCount() {
 		Cursor mC = db.query("drink_order",
-				new String[] { "count(d_qty) as d_tot" }, null, null, null, null,
-				null);
+				new String[] { "count(d_qty) as d_tot" }, null, null, null,
+				null, null);
 
 		if (mC != null && mC.getCount() > 0) {
 			mC.moveToFirst();
@@ -163,7 +172,22 @@ public class Drink_Order {
 	}
 
 	public String getOrderTotal() {
-		// TODO
-		return "0.0 EUR";
+		Cursor mC = db.query("drink_order",
+				new String[] { "d_qty", "d_price" }, null, null, null, null,
+				null);
+
+		if (mC != null && mC.getCount() > 0) {
+			mC.moveToFirst();
+			
+			double i = mC.getDouble(1) * mC.getInt(0);
+			while(!mC.isLast())
+			{
+				mC.moveToNext();
+				i += mC.getDouble(1) * mC.getInt(0);
+			}
+			mC.close();
+			return i + " EUR";
+		} else
+			return "0.0 EUR";
 	}
 }

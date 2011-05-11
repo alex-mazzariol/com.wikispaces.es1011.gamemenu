@@ -12,17 +12,16 @@ import android.widget.TextView;
 public class Drink_ImageListAdapter extends BaseAdapter {
 	private Context mC;
 	private Cursor cur;
-	
+
 	public Drink_ImageListAdapter(Context cx, Cursor c) {
 		mC = cx;
 		cur = c;
 	}
 
-	protected void finalize()
-	{
+	protected void finalize() {
 		cur.close();
 	}
-	
+
 	public int getCount() {
 		return cur.getCount();
 	}
@@ -32,8 +31,8 @@ public class Drink_ImageListAdapter extends BaseAdapter {
 	}
 
 	public long getItemId(int position) {
-		// Ai nostri fini, è sufficiente.
-		return position + 1;
+		cur.moveToPosition(position);
+		return cur.getLong(cur.getColumnIndex("_id"));
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {

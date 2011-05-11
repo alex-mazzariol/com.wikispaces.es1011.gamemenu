@@ -112,6 +112,20 @@ public class Drink_OriginalList {
 			return "";
 	}
 	
+	public double getDrinkRawPrice(long drink_id) {
+		Cursor mC = db.query("drink_list", new String[] { "d_price" }, "_id="
+				+ drink_id, null, null, null, null);
+		
+		if(mC != null){
+			mC.moveToFirst();
+			double sRet = mC.getDouble(0);
+			mC.close();
+			return sRet;
+		}
+		else
+			return 0.0;
+	}
+	
 	public String getDrinkLong(long drink_id){
 		Cursor mC = db.query("drink_list", new String[] { "d_description" }, "_id="
 				+ drink_id, null, null, null, null);

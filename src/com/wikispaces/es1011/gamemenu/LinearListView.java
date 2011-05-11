@@ -63,9 +63,6 @@ public class LinearListView extends LinearLayout {
 						.setOnClickListener((OnClickListener) new ParameterizedOnClickListener(
 								i, context));
 				context.addView(vRes);
-				if (i < context.adapter.getCount() - 1)
-					context.addView(View.inflate(getContext(),
-							R.layout.drink_listitem_separator, null));
 			}
 			super.onChanged();
 		}

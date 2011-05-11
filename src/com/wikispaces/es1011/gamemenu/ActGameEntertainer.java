@@ -268,7 +268,8 @@ public class ActGameEntertainer extends Activity implements
 		viewWidth = holder.getSurfaceFrame().width();
 		viewHeight = holder.getSurfaceFrame().height();
 
-		actuallyShownView.initDimension(viewWidth, viewHeight);
+		if(actuallyShownView != null)
+			actuallyShownView.initDimension(viewWidth, viewHeight);
 
 		if (ball == null)
 			ball = new Game_Ball(viewWidth, viewHeight, gsw, gs);

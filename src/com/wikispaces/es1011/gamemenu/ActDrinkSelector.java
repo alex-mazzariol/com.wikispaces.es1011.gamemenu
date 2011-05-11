@@ -103,7 +103,8 @@ public class ActDrinkSelector extends Activity {
 					.setOnClickListener(new OnClickListener() {
 						public void onClick(View v) {
 							doCurrent.drinkIncrement(iDrinkDetailID, dlList
-									.getDrinkName(iDrinkDetailID));
+									.getDrinkName(iDrinkDetailID),
+									dlList.getDrinkRawPrice(iDrinkDetailID));
 						}
 					});
 			((ImageButton) findViewById(R.id.drink_det_btn_minus))
