@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+android:id/drink_details" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<LinearLayout android:id="@+android:id/drink_det_layout"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:padding="10dp" android:orientation="horizontal">
+
+		<LinearLayout android:orientation="vertical"
+			android:layout_height="wrap_content" android:layout_width="fill_parent"
+			android:layout_weight="0.5">
+			>
+			<LinearLayout android:id="@+android:id/drink_det_preview"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="horizontal" android:layout_marginBottom="10dp">
+
+				<ImageView android:id="@+android:id/drink_det_image"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:layout_weight="0.5" android:padding="10dp">
+				</ImageView>
+
+				<LinearLayout android:id="@+android:id/drink_det_llyt_image"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:layout_weight="0.5" android:orientation="vertical">
+
+					<TextView android:id="@+android:id/drink_det_name"
+						android:layout_width="fill_parent" android:layout_height="fill_parent"
+						android:layout_weight="0.5" android:padding="10dp"
+						android:gravity="center_vertical" android:textSize="20sp"
+						android:text="name">
+					</TextView>
+
+					<TextView android:id="@+android:id/drink_det_short"
+						android:layout_width="fill_parent" android:layout_height="fill_parent"
+						android:layout_weight="0.5" android:padding="10dp"
+						android:gravity="center_vertical" android:text="short description, like bla bla bla bla bla">
+					</TextView>
+
+				</LinearLayout>
+
+			</LinearLayout>
+
+			<TextView android:id="@+android:id/drink_det_longdescr"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:padding="10dp" android:gravity="center"
+				android:text="this will be a long long text within a lot of meaningless words, like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla blathis will be a long long text within a lot of meaningless words, like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla blathis will be a long long text within a lot of meaningless words, like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla blathis will be a long long text within a lot of meaningless words, like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla like bla bla bla bla bla">
+			</TextView>
+		</LinearLayout>
+
+		<LinearLayout android:orientation="vertical"
+			android:layout_height="wrap_content" android:layout_width="fill_parent"
+			android:layout_weight="0.5">
+			<LinearLayout android:id="@+android:id/drink_det_lyt_plusminus"
+				android:orientation="horizontal" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginBottom="20dp">
+
+				<ImageButton android:id="@+android:id/drink_det_btn_plus"
+					android:clickable="true" android:visibility="visible"
+					android:src="@drawable/drink_btn_green" android:layout_width="fill_parent"
+					android:layout_height="60dp" android:layout_weight="0.5"
+					android:gravity="center" android:layout_margin="3dp"
+					android:scaleType="centerInside" android:background="@drawable/btn_greenbg" />
+
+				<ImageButton android:id="@+android:id/drink_det_btn_minus"
+					android:clickable="true" android:visibility="visible"
+					android:src="@drawable/drink_btn_red" android:layout_width="fill_parent"
+					android:layout_height="60dp" android:layout_weight="0.5"
+					android:gravity="center" android:layout_margin="3dp"
+					android:scaleType="centerInside" android:background="@drawable/btn_redbg" />
+
+			</LinearLayout>
+
+			<Button android:id="@+android:id/drink_det_btn_back"
+				android:clickable="true" android:visibility="visible"
+				android:layout_width="fill_parent" android:layout_height="60dp"
+				android:gravity="center" android:text="&lt;&lt; Back">
+			</Button>
+		</LinearLayout>
+	</LinearLayout>
+</ScrollView>

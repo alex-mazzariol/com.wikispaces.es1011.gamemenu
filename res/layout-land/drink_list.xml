@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+android:id/drink_list_view" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:padding="10dp"
+	android:orientation="horizontal">
+
+	<ListView android:id="@+android:id/drink_list_listview"
+		android:isScrollContainer="true" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:background="#000000"
+		android:gravity="center" android:textSize="10sp"
+		android:layout_weight="0.5">
+	</ListView>
+
+	<LinearLayout android:id="@+android:id/drink_list_headerpanel"
+		android:orientation="vertical" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_weight="0.5">
+
+		<TextView android:id="@+android:id/drink_list_headerpanel_label"
+			android:gravity="center|center_vertical" android:background="#000000"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			style="@android:style/TextAppearance.Medium" android:layout_weight="0.5">
+		</TextView>
+
+		<Button android:id="@+android:id/drink_list_headerpanel_btn_order"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			android:layout_weight="0.5" android:layout_margin="10dp"
+			android:text="Order" android:gravity="center|center_vertical">
+		</Button>
+
+	</LinearLayout>
+
+</LinearLayout>
