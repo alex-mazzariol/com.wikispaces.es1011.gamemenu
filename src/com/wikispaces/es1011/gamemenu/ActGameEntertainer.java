@@ -92,6 +92,7 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 	public void onPause() {
 		super.onPause();
 		//TODO Save game progress and destroy surface (and thread!)
+		
 		gVw.surfaceDestroyed(null);
 		wlLock.release();
 	}
