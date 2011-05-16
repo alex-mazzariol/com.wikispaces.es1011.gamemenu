@@ -1,6 +1,7 @@
 package com.wikispaces.es1011.gamemenu;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -136,6 +137,7 @@ public class ActDrinkSelector extends Activity {
 
 	public void onResume() {
 		super.onResume();
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		showPage(ePage.pgList);
 	}
 }

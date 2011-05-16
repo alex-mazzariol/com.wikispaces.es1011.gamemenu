@@ -7,6 +7,7 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
@@ -117,6 +118,7 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	@Override
 	public void onResume() {
 		super.onResume();
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
 		svPreview = new SurfaceView(this);
 		hPreview = svPreview.getHolder();
