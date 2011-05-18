@@ -12,6 +12,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -28,10 +30,40 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 
 	private Sensor mAccelerometer;
 
-	private int viewHeight, viewWidth;
 	private Game_View.Game_Thread gTh;
 	private Game_View gVw;
 
+	/**
+	 * Contextual menu creation
+	 * 
+	 * @param menu the object to manipulate
+	 * @return true if the item was correctly managed
+	 */
+	public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        
+        menu.add(0, 1, 0, "Restart");
+
+        return true;
+    }
+
+    /**
+     * Invoked when the user selects an item from the Menu.
+     * 
+     * @param item the Menu entry which was selected
+     * @return true if the Menu item was legit (and we consumed it), false
+     *         otherwise
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == 1)
+        {
+        	gTh.doStart(0);
+        }
+
+        return false;
+    }
+    
 	/**
 	 * Called when the activity is first created.
 	 * 
@@ -40,9 +72,6 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		// Get an instance of the SensorManager
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -63,6 +92,7 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 	public void onPause() {
 		super.onPause();
 		//TODO Save game progress and destroy surface (and thread!)
+		
 		gVw.surfaceDestroyed(null);
 		wlLock.release();
 	}
@@ -80,6 +110,7 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 	@Override
 	protected void onResume() {
 		wlLock.acquire();
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		gVw = new Game_View(this);
 		gTh = gVw.getThread();
