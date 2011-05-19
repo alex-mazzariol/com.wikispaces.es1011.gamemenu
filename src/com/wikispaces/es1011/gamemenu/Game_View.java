@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -70,6 +69,7 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 		private int iBricksHit;
 		private int iPadX, iPadY, iBallX, iBallY, iLevel;
 		private int iOffsetXBricks;
+		public double dPadSpeed = 0.0; 
 
 		private int iDefaultX = 50, iDefaultY = 50;
 
@@ -95,7 +95,7 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 				iBallX = iDefaultX;
 				iBallY = iDefaultY;
 				iBricksHit = 0;
-				
+
 				iBricks = new int[this.iLevel];
 				iLives = 3;
 
@@ -120,17 +120,21 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 
 		public void run() {
 			while (bRun) {
-				Canvas c = null;
-				try {
-					c = shHolder.lockCanvas();
-					synchronized (shHolder) {
-						if (sStatus == eStatus.Running)
-							updateGame();
-						doDraw(c);
+				if (System.currentTimeMillis() - lTime > 50) {
+					lTime += 50;
+					
+					Canvas c = null;
+					try {
+						c = shHolder.lockCanvas();
+						synchronized (shHolder) {
+							if (sStatus == eStatus.Running)
+								updateGame();
+							doDraw(c);
+						}
+					} finally {
+						if (c != null)
+							shHolder.unlockCanvasAndPost(c);
 					}
-				} finally {
-					if (c != null)
-						shHolder.unlockCanvasAndPost(c);
 				}
 			}
 		}
@@ -210,130 +214,126 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			pBlue.setTextSize(16);
 
 			c.drawRect(new Rect(0, 0, iCanvasW, 19), pBlack);
-			c.drawText("Lev " + Integer.toString(iLevel - 13) + ", lives " + iLives, 5, 17, pBlue);
+			c.drawText("Lev " + Integer.toString(iLevel - 13) + ", lives "
+					+ iLives + ", xacc: " + this.dPadSpeed, 5, 17, pBlue);
 		}
 
 		private void updateGame() {
-			if (System.currentTimeMillis() - lTime > 50) {
-				lTime += 50;
 
-				// Try to keep 20 FPS
-				if (iBallX > (iCanvasW - bBall.getWidth() - 1))
-					iDirX *= -1;
+			// Try to keep 20 FPS
+			if (iBallX > (iCanvasW - bBall.getWidth() - 1))
+				iDirX *= -1;
 
-				if (iBallX < 1)
-					iDirX *= -1;
+			if (iBallX < 1)
+				iDirX *= -1;
 
-				if (iBallY < 21)
-					iDirY *= -1;
+			if (iBallY < 21)
+				iDirY *= -1;
 
-				if (iBallY > (iCanvasH - bBall.getHeight() - 1)) {
-					if (iLives > 0) {
-						// Restart position
-						iBallY = iDefaultY;
-						iBallX = iDefaultX;
+			if (iBallY > (iCanvasH - bBall.getHeight() - 1)) {
+				if (iLives > 0) {
+					// Restart position
+					iBallY = iDefaultY;
+					iBallX = iDefaultX;
 
-						iLives--;
-					} else {
-						// Game over
-						doStart(0);
-						return;
-					}
+					iLives--;
+				} else {
+					// Game over
+					doStart(0);
+					return;
 				}
-
-				// Collisions
-				for (int i = 0; i < iLevel; i++) {
-					if (iBricks[i] == 0) {
-						int iBrickX = iOffsetXBricks + (i % 7) * iBrickW;
-						int iBrickY = (int) Math.floor(i / 7) * iBrickH + 20;
-						// Check collision
-						boolean bXCollision = iBallX > iBrickX
-								- bBall.getWidth()
-								&& iBallX < iBrickX + iBrickW;
-						boolean bYCollision = iBallY > iBrickY
-								- bBall.getHeight()
-								&& iBallY < iBrickY + iBrickH;
-						if (bXCollision && bYCollision) {
-							// Collided!
-							iBricks[i] = 1;
-							iBricksHit++;
-							
-							// Check if last brick
-							if(iBricksHit == iLevel) {
-								//Level cleared
-								doStart(iLevel+1);
-								return;
-							}
-
-							// Update ball direction.
-							if (iDirX > 0 && iDirY < 0) {
-								if (iBallY < iBrickY + (iBrickH / 2)) {
-									// Side hit, change also X direction.
-									iDirX *= -1;
-								}
-
-								if (iBallX > iBrickX - (bBall.getWidth() / 2)) {
-									// Bottom hit, change also Y direction.
-									iDirY *= -1;
-								}
-							} else if (iDirX < 0 && iDirY < 0) {
-								if (iBallY < iBrickY + (iBrickH / 2)) {
-									// Side hit, change also X direction.
-									iDirX *= -1;
-								}
-
-								if (iBallX < iBrickX + iBrickW
-										- (bBall.getWidth() / 2)) {
-									// Bottom hit, change also Y direction.
-									iDirY *= -1;
-								}
-							} else if (iDirY > 0) {
-								if (iBallY < iBrickY + (bBall.getHeight() / 2)) {
-									// Side hit, change also X direction.
-									iDirX *= -1;
-								}
-							}
-
-							break;
-						}
-					}
-				}
-
-				// Collision with the pad
-				boolean bPadCX = iBallX > iPadX - bBall.getWidth()
-						&& iBallX < iPadX + bPad.getWidth();
-				boolean bPadCY = iBallY > iPadY - bBall.getHeight()
-						&& iBallY < iPadY + bPad.getHeight();
-
-				if (bPadCX && bPadCY) {
-					// Update ball direction.
-					if (iDirX > 0) {
-						if (iBallY > iPadY - (bPad.getHeight() / 2)) {
-							// Side hit, change also X direction.
-							iDirX *= -1;
-						}
-
-						if (iBallX > iPadX - (bBall.getWidth() / 2)) {
-							// Top hit, change also Y direction.
-							iDirY *= -1;
-						}
-					} else if (iDirX < 0) {
-						if (iBallY > iPadY - (bPad.getHeight() / 2)) {
-							// Side hit, change also X direction.
-							iDirX *= -1;
-						}
-
-						if (iBallX < iPadX + bPad.getWidth()
-								- (bBall.getWidth() / 2)) {
-							// Top hit, change also Y direction.
-							iDirY *= -1;
-						}
-					}
-				}
-
-				iBallX += iDirX;
-				iBallY += iDirY;
 			}
+
+			// Collisions
+			for (int i = 0; i < iLevel; i++) {
+				if (iBricks[i] == 0) {
+					int iBrickX = iOffsetXBricks + (i % 7) * iBrickW;
+					int iBrickY = (int) Math.floor(i / 7) * iBrickH + 20;
+					// Check collision
+					boolean bXCollision = iBallX > iBrickX - bBall.getWidth()
+							&& iBallX < iBrickX + iBrickW;
+					boolean bYCollision = iBallY > iBrickY - bBall.getHeight()
+							&& iBallY < iBrickY + iBrickH;
+					if (bXCollision && bYCollision) {
+						// Collided!
+						iBricks[i] = 1;
+						iBricksHit++;
+
+						// Check if last brick
+						if (iBricksHit == iLevel) {
+							// Level cleared
+							doStart(iLevel + 1);
+							return;
+						}
+
+						// Update ball direction.
+						if (iDirX > 0 && iDirY < 0) {
+							if (iBallY < iBrickY + (iBrickH / 2)) {
+								// Side hit, change also X direction.
+								iDirX *= -1;
+							}
+
+							if (iBallX > iBrickX - (bBall.getWidth() / 2)) {
+								// Bottom hit, change also Y direction.
+								iDirY *= -1;
+							}
+						} else if (iDirX < 0 && iDirY < 0) {
+							if (iBallY < iBrickY + (iBrickH / 2)) {
+								// Side hit, change also X direction.
+								iDirX *= -1;
+							}
+
+							if (iBallX < iBrickX + iBrickW
+									- (bBall.getWidth() / 2)) {
+								// Bottom hit, change also Y direction.
+								iDirY *= -1;
+							}
+						} else if (iDirY > 0) {
+							if (iBallY < iBrickY + (bBall.getHeight() / 2)) {
+								// Side hit, change also X direction.
+								iDirX *= -1;
+							}
+						}
+
+						break;
+					}
+				}
+			}
+
+			// Collision with the pad
+			boolean bPadCX = iBallX > iPadX - bBall.getWidth()
+					&& iBallX < iPadX + bPad.getWidth();
+			boolean bPadCY = iBallY > iPadY - bBall.getHeight()
+					&& iBallY < iPadY + bPad.getHeight();
+
+			if (bPadCX && bPadCY) {
+				// Update ball direction.
+				if (iDirX > 0) {
+					if (iBallY > iPadY - (bPad.getHeight() / 2)) {
+						// Side hit, change also X direction.
+						iDirX *= -1;
+					}
+
+					if (iBallX > iPadX - (bBall.getWidth() / 2)) {
+						// Top hit, change also Y direction.
+						iDirY *= -1;
+					}
+				} else if (iDirX < 0) {
+					if (iBallY > iPadY - (bPad.getHeight() / 2)) {
+						// Side hit, change also X direction.
+						iDirX *= -1;
+					}
+
+					if (iBallX < iPadX + bPad.getWidth()
+							- (bBall.getWidth() / 2)) {
+						// Top hit, change also Y direction.
+						iDirY *= -1;
+					}
+				}
+			}
+
+			iBallX += iDirX;
+			iBallY += iDirY;
 		}
 	}
 }
