@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -67,9 +68,9 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 		private Bitmap bBall, bPad, bBrick[];
 		private int iBricks[];
 		private int iBricksHit;
+		public int iPadSpeed = 0;
 		private int iPadX, iPadY, iBallX, iBallY, iLevel;
 		private int iOffsetXBricks;
-		public double dPadSpeed = 0.0; 
 
 		private int iDefaultX = 50, iDefaultY = 50;
 
@@ -122,7 +123,6 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			while (bRun) {
 				if (System.currentTimeMillis() - lTime > 50) {
 					lTime += 50;
-					
 					Canvas c = null;
 					try {
 						c = shHolder.lockCanvas();
@@ -214,8 +214,8 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			pBlue.setTextSize(16);
 
 			c.drawRect(new Rect(0, 0, iCanvasW, 19), pBlack);
-			c.drawText("Lev " + Integer.toString(iLevel - 13) + ", lives "
-					+ iLives + ", xacc: " + this.dPadSpeed, 5, 17, pBlue);
+			c.drawText("Level " + Integer.toString(iLevel - 13) + ", lives "
+					+ iLives, 5, 17, pBlue);
 		}
 
 		private void updateGame() {
@@ -334,6 +334,10 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 
 			iBallX += iDirX;
 			iBallY += iDirY;
+
+			iPadX += iPadSpeed;
+
+			// TODO
 		}
 	}
 }

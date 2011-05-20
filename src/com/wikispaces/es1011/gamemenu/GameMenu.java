@@ -42,6 +42,6 @@ public class GameMenu extends TabActivity {
                       .setContent(intent);
         tabHost.addTab(spec);
 
-        tabHost.setCurrentTab(2);
+        tabHost.setCurrentTab(0);
     }
 }
