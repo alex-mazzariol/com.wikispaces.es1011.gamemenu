@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -337,7 +336,11 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 
 			iPadX += iPadSpeed;
 
-			// TODO
+			if(iPadX < 0)
+				iPadX = 0;
+			
+			if(iPadX > iCanvasW - bPad.getWidth())
+				iPadX = iCanvasW - bPad.getWidth();
 		}
 	}
 }
