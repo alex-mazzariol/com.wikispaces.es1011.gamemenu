@@ -87,13 +87,31 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 		gVw.surfaceDestroyed(null);
 		wlLock.release();
 	}
-	
-	protected void onSaveInstanceState(Bundle outB){
-		
+
+	protected void onSaveInstanceState(Bundle outB) {
+		outB.putInt("g_BX", gST.iBallX);
+		outB.putInt("g_BY", gST.iBallY);
+		outB.putInt("g_DX", gST.iDirX);
+		outB.putInt("g_DY", gST.iDirY);
+		outB.putInt("g_Level", gST.iLevel);
+		outB.putInt("g_Lives", gST.iLives);
+		outB.putInt("g_BHit", gST.iBricksHit);
+		outB.putInt("g_PX", gST.iPadX);
+		outB.putIntArray("g_Bricks", gST.iBricks);
 	}
-	
-	protected void onRestoreInstanceState(Bundle inB){
-		
+
+	protected void onRestoreInstanceState(Bundle inB) {
+		if (inB != null) {
+			gST.iBallX = inB.getInt("g_BX");
+			gST.iBallY = inB.getInt("g_BY");
+			gST.iDirX = inB.getInt("g_DX");
+			gST.iDirY = inB.getInt("g_DY");
+			gST.iPadX = inB.getInt("g_PX");
+			gST.iBricks = inB.getIntArray("g_Bricks");
+			gST.iLives = inB.getInt("g_Lives");
+			gST.iLevel = inB.getInt("g_Level");
+			gST.iBricksHit = inB.getInt("g_BHit");
+		}
 	}
 
 	@Override
