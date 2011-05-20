@@ -13,11 +13,13 @@ import android.view.SurfaceView;
 public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 	private Context mc;
 	private Game_Thread gThread;
+	private Game_Status gST;
 
-	public Game_View(Context context) {
+	public Game_View(Context context, Game_Status gs) {
 		super(context);
 		mc = context;
-
+		gST = gs;
+		
 		getHolder().addCallback(this);
 
 		gThread = new Game_Thread(getHolder());
@@ -39,8 +41,8 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void surfaceCreated(SurfaceHolder arg0) {
 		gThread.setRunning(true);
-		gThread.doStart(0);
-		gThread.start();
+		gST.resetLevel(0);
+		gThread.doStart();
 	}
 
 	public void surfaceDestroyed(SurfaceHolder arg0) {
@@ -65,19 +67,11 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 		private boolean bRun = false;
 
 		private Bitmap bBall, bPad, bBrick[];
-		private int iBricks[];
-		private int iBricksHit;
-		public int iPadSpeed = 0;
-		private int iPadX, iPadY, iBallX, iBallY, iLevel;
 		private int iOffsetXBricks;
-
-		private int iDefaultX = 50, iDefaultY = 50;
-
-		private int iDirX = 3, iDirY = 3;
-		private int iLives;
 
 		private SurfaceHolder shHolder;
 		private int iBrickW, iBrickH;
+		private int iPadY;
 
 		private long lTime;
 
@@ -88,21 +82,12 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 					.height());
 		}
 
-		public void doStart(int iLevel) {
+		public void doStart() {
 			synchronized (shHolder) {
-				this.iLevel = 14 + iLevel;
-				iPadX = 0;
-				iBallX = iDefaultX;
-				iBallY = iDefaultY;
-				iBricksHit = 0;
-
-				iBricks = new int[this.iLevel];
-				iLives = 3;
-
 				lTime = System.currentTimeMillis() + 100;
 				setStatus(eStatus.Running);
 			}
-
+			start();
 		}
 
 		public void setStatus(eStatus newVal) {
@@ -180,8 +165,8 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 								mc.getResources(), R.drawable.game_brick4),
 								iBrickW, iBrickH, true);
 
-				iDefaultX = (iCanvasW - bBall.getWidth()) / 2;
-				iDefaultY = (iCanvasH - bBall.getHeight()) / 2;
+				gST.iDefaultX = (iCanvasW - bBall.getWidth()) / 2;
+				gST.iDefaultY = (iCanvasH - bBall.getHeight()) / 2;
 			}
 		}
 
@@ -195,11 +180,11 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 		private void doDraw(Canvas c) {
 			c.drawARGB(255, 80, 80, 80);
 
-			c.drawBitmap(bBall, iBallX, iBallY, null);
-			c.drawBitmap(bPad, iPadX, iPadY, null);
+			c.drawBitmap(bBall, gST.iBallX, gST.iBallY, null);
+			c.drawBitmap(bPad, gST.iPadX, iPadY, null);
 
-			for (int i = 0; i < iLevel; i++) {
-				if (iBricks[i] == 0)
+			for (int i = 0; i < gST.iLevel; i++) {
+				if (gST.iBricks[i] == 0)
 					c.drawBitmap(bBrick[i % 4], iOffsetXBricks + (i % 7)
 							* iBrickW, (int) Math.floor(i / 7) * iBrickH + 20,
 							null);
@@ -213,84 +198,79 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			pBlue.setTextSize(16);
 
 			c.drawRect(new Rect(0, 0, iCanvasW, 19), pBlack);
-			c.drawText("Level " + Integer.toString(iLevel - 13) + ", lives "
-					+ iLives, 5, 17, pBlue);
+			c.drawText("Level " + Integer.toString(gST.iLevel - 13) + ", lives "
+					+ gST.iLives, 5, 17, pBlue);
 		}
 
 		private void updateGame() {
 
-			// Try to keep 20 FPS
-			if (iBallX > (iCanvasW - bBall.getWidth() - 1))
-				iDirX *= -1;
+			if (gST.iBallX > (iCanvasW - bBall.getWidth() - 1))
+				gST.iDirX *= -1;
 
-			if (iBallX < 1)
-				iDirX *= -1;
+			if (gST.iBallX < 1)
+				gST.iDirX *= -1;
 
-			if (iBallY < 21)
-				iDirY *= -1;
+			if (gST.iBallY < 21)
+				gST.iDirY *= -1;
 
-			if (iBallY > (iCanvasH - bBall.getHeight() - 1)) {
-				if (iLives > 0) {
-					// Restart position
-					iBallY = iDefaultY;
-					iBallX = iDefaultX;
-
-					iLives--;
+			if (gST.iBallY > (iCanvasH - bBall.getHeight() - 1)) {
+				if (gST.iLives > 0) {
+					gST.loseLife();
 				} else {
 					// Game over
-					doStart(0);
+					gST.resetGame();
 					return;
 				}
 			}
 
 			// Collisions
-			for (int i = 0; i < iLevel; i++) {
-				if (iBricks[i] == 0) {
+			for (int i = 0; i < gST.iLevel; i++) {
+				if (gST.iBricks[i] == 0) {
 					int iBrickX = iOffsetXBricks + (i % 7) * iBrickW;
 					int iBrickY = (int) Math.floor(i / 7) * iBrickH + 20;
 					// Check collision
-					boolean bXCollision = iBallX > iBrickX - bBall.getWidth()
-							&& iBallX < iBrickX + iBrickW;
-					boolean bYCollision = iBallY > iBrickY - bBall.getHeight()
-							&& iBallY < iBrickY + iBrickH;
+					boolean bXCollision = gST.iBallX > iBrickX - bBall.getWidth()
+							&& gST.iBallX < iBrickX + iBrickW;
+					boolean bYCollision = gST.iBallY > iBrickY - bBall.getHeight()
+							&& gST.iBallY < iBrickY + iBrickH;
 					if (bXCollision && bYCollision) {
 						// Collided!
-						iBricks[i] = 1;
-						iBricksHit++;
+						gST.iBricks[i] = 1;
+						gST.iBricksHit++;
 
 						// Check if last brick
-						if (iBricksHit == iLevel) {
+						if (gST.iBricksHit == gST.iLevel) {
 							// Level cleared
-							doStart(iLevel + 1);
+							gST.resetLevel(gST.iLevel - 13);
 							return;
 						}
 
 						// Update ball direction.
-						if (iDirX > 0 && iDirY < 0) {
-							if (iBallY < iBrickY + (iBrickH / 2)) {
+						if (gST.iDirX > 0 && gST.iDirY < 0) {
+							if (gST.iBallY < iBrickY + (iBrickH / 2)) {
 								// Side hit, change also X direction.
-								iDirX *= -1;
+								gST.iDirX *= -1;
 							}
 
-							if (iBallX > iBrickX - (bBall.getWidth() / 2)) {
+							if (gST.iBallX > iBrickX - (bBall.getWidth() / 2)) {
 								// Bottom hit, change also Y direction.
-								iDirY *= -1;
+								gST.iDirY *= -1;
 							}
-						} else if (iDirX < 0 && iDirY < 0) {
-							if (iBallY < iBrickY + (iBrickH / 2)) {
+						} else if (gST.iDirX < 0 && gST.iDirY < 0) {
+							if (gST.iBallY < iBrickY + (iBrickH / 2)) {
 								// Side hit, change also X direction.
-								iDirX *= -1;
+								gST.iDirX *= -1;
 							}
 
-							if (iBallX < iBrickX + iBrickW
+							if (gST.iBallX < iBrickX + iBrickW
 									- (bBall.getWidth() / 2)) {
 								// Bottom hit, change also Y direction.
-								iDirY *= -1;
+								gST.iDirY *= -1;
 							}
-						} else if (iDirY > 0) {
-							if (iBallY < iBrickY + (bBall.getHeight() / 2)) {
+						} else if (gST.iDirY > 0) {
+							if (gST.iBallY < iBrickY + (bBall.getHeight() / 2)) {
 								// Side hit, change also X direction.
-								iDirX *= -1;
+								gST.iDirX *= -1;
 							}
 						}
 
@@ -300,47 +280,48 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			}
 
 			// Collision with the pad
-			boolean bPadCX = iBallX > iPadX - bBall.getWidth()
-					&& iBallX < iPadX + bPad.getWidth();
-			boolean bPadCY = iBallY > iPadY - bBall.getHeight()
-					&& iBallY < iPadY + bPad.getHeight();
+			boolean bPadCX = gST.iBallX > gST.iPadX - bBall.getWidth()
+					&& gST.iBallX < gST.iPadX + bPad.getWidth();
+			boolean bPadCY = gST.iBallY > iPadY - bBall.getHeight()
+					&& gST.iBallY < iPadY + bPad.getHeight();
 
 			if (bPadCX && bPadCY) {
 				// Update ball direction.
-				if (iDirX > 0) {
-					if (iBallY > iPadY - (bPad.getHeight() / 2)) {
+				if (gST.iDirX > 0) {
+					if (gST.iBallY > iPadY - (bPad.getHeight() / 2)) {
 						// Side hit, change also X direction.
-						iDirX *= -1;
+						gST.iDirX *= -1;
 					}
 
-					if (iBallX > iPadX - (bBall.getWidth() / 2)) {
+					if (gST.iBallX > gST.iPadX - (bBall.getWidth() / 2)) {
 						// Top hit, change also Y direction.
-						iDirY *= -1;
+						gST.iDirY *= -1;
 					}
-				} else if (iDirX < 0) {
-					if (iBallY > iPadY - (bPad.getHeight() / 2)) {
+				} else if (gST.iDirX < 0) {
+					if (gST.iBallY > iPadY - (bPad.getHeight() / 2)) {
 						// Side hit, change also X direction.
-						iDirX *= -1;
+						gST.iDirX *= -1;
 					}
 
-					if (iBallX < iPadX + bPad.getWidth()
+					if (gST.iBallX < gST.iPadX + bPad.getWidth()
 							- (bBall.getWidth() / 2)) {
 						// Top hit, change also Y direction.
-						iDirY *= -1;
+						gST.iDirY *= -1;
 					}
 				}
+				
 			}
 
-			iBallX += iDirX;
-			iBallY += iDirY;
+			gST.iBallX += gST.iDirX;
+			gST.iBallY += gST.iDirY;
 
-			iPadX += iPadSpeed;
+			gST.iPadX += gST.iPadSpeed;
 
-			if(iPadX < 0)
-				iPadX = 0;
+			if(gST.iPadX < 0)
+				gST.iPadX = 0;
 			
-			if(iPadX > iCanvasW - bPad.getWidth())
-				iPadX = iCanvasW - bPad.getWidth();
+			if(gST.iPadX > iCanvasW - bPad.getWidth())
+				gST.iPadX = iCanvasW - bPad.getWidth();
 		}
 	}
 }

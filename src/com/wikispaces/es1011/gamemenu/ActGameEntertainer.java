@@ -1,26 +1,15 @@
 package com.wikispaces.es1011.gamemenu;
 
-import com.wikispaces.es1011.gamemenu.Game_View.eStatus;
-
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 public class ActGameEntertainer extends Activity implements SensorEventListener {
 
@@ -30,8 +19,8 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 
 	private Sensor mAccelerometer;
 
-	private Game_View.Game_Thread gTh;
 	private Game_View gVw;
+	private Game_Status gST;
 
 	/**
 	 * Contextual menu creation
@@ -59,7 +48,7 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == 1) {
-			gTh.doStart(0);
+			gST.resetGame();
 		}
 
 		return false;
@@ -87,15 +76,24 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 				.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		mSensorManager.registerListener((SensorEventListener) this,
 				mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+
+		gST = new Game_Status();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		// TODO Save game progress and destroy surface (and thread!)
 
 		gVw.surfaceDestroyed(null);
 		wlLock.release();
+	}
+	
+	protected void onSaveInstanceState(Bundle outB){
+		
+	}
+	
+	protected void onRestoreInstanceState(Bundle inB){
+		
 	}
 
 	@Override
@@ -113,12 +111,9 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 		wlLock.acquire();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-		gVw = new Game_View(this);
-		gTh = gVw.getThread();
+		gVw = new Game_View(this, gST);
 
 		setContentView(gVw);
-
-		gTh.setStatus(eStatus.Running);
 
 		super.onResume();
 	}
@@ -138,9 +133,7 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 			return;
 		}
 
-		if (gTh != null) {
-			gTh.iPadSpeed = (int)event.values[2];
-		}
+		gST.iPadSpeed = (int) event.values[2];
 	}
 
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
