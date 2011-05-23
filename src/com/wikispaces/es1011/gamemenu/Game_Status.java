@@ -9,6 +9,10 @@ public class Game_Status {
 	public int iLives;
 	public int iDefaultX = 50, iDefaultY = 50;
 
+	public Game_Status() {
+		resetGame();
+	}
+	
 	public void resetLevel(int iL){
 		iLevel = 14 + iL;
 		iBricksHit = 0;

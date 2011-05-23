@@ -4,8 +4,8 @@
 	android:layout_height="fill_parent">
 
 	<LinearLayout android:id="@+android:id/drink_order_inlayout"
-		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:padding="10dp" android:orientation="vertical">
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:padding="5dp" android:orientation="vertical">
 
 		<com.wikispaces.es1011.gamemenu.LinearListView
 			android:id="@+android:id/drink_riepilogo" android:layout_width="fill_parent"
@@ -57,20 +57,21 @@
 				<Button android:id="@+android:id/drink_order_btn_clear"
 					android:layout_width="fill_parent" android:layout_height="fill_parent"
 					android:layout_weight="0.5" android:text="Clear" android:gravity="center"
-					android:layout_margin="3dp" android:background="@drawable/btn_redbg">
+					android:layout_marginRight="3dp" android:background="@drawable/btn_redbg">
 				</Button>
 
 				<Button android:id="@+android:id/drink_order_btn_send"
 					android:layout_width="fill_parent" android:layout_height="fill_parent"
 					android:layout_weight="0.5" android:text="Send" android:gravity="center"
-					android:layout_margin="3dp" android:background="@drawable/btn_greenbg">
+					android:layout_marginLeft="3dp" android:background="@drawable/btn_greenbg">
 				</Button>
 
 			</LinearLayout>
 
 			<Button android:id="@+android:id/drink_order_btn_back"
 				android:layout_width="fill_parent" android:layout_height="60dp"
-				android:text="&lt;&lt; Back" android:gravity="center">
+				android:text="&lt;&lt; Back" android:layout_margin="0dp"
+				android:padding="0dp">
 			</Button>
 		</LinearLayout>
 

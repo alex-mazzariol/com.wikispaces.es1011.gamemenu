@@ -41,7 +41,6 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void surfaceCreated(SurfaceHolder arg0) {
 		gThread.setRunning(true);
-		gST.resetLevel(0);
 		gThread.doStart();
 	}
 

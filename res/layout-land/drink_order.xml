@@ -16,64 +16,42 @@
 
 	<LinearLayout android:id="@+android:id/drink_bottompanel"
 		android:orientation="vertical" android:layout_height="fill_parent"
-		android:layout_width="fill_parent" android:layout_weight="0.5"
-		android:layout_margin="10dp">
-
-		<LinearLayout android:orientation="horizontal"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_weight="0.3">
-
+		android:layout_width="fill_parent" android:layout_weight="0.5">
+		<LinearLayout android:layout_width="match_parent"
+			android:id="@+id/linearLayout1" android:layout_height="wrap_content">
 			<TextView android:text="Total item count:" android:gravity="left"
 				android:background="#000000" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:layout_weight="0.3">
-			</TextView>
-
+				android:layout_height="wrap_content" android:layout_weight="0.4" />
 			<TextView android:id="@+android:id/drink_order_lbl_totdrink"
 				android:text="0" android:gravity="right" android:background="#000000"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:layout_weight="0.7">
-			</TextView>
+				android:layout_weight="0.6" />
 		</LinearLayout>
-
-		<LinearLayout android:orientation="horizontal"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_weight="0.3">
-
+		<LinearLayout android:layout_width="match_parent"
+			android:id="@+id/linearLayout2" android:layout_height="wrap_content"
+			android:layout_marginBottom="10dp">
 			<TextView android:text="Order grand total:" android:gravity="left"
 				android:background="#000000" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:layout_weight="0.3">
-			</TextView>
-
+				android:layout_height="wrap_content" android:layout_weight="0.4" />
 			<TextView android:id="@+android:id/drink_order_lbl_totcash"
 				android:text="0 EUR" android:gravity="right" android:background="#000000"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:layout_weight="0.7">
-			</TextView>
+				android:layout_weight="0.6" />
 		</LinearLayout>
-
-		<LinearLayout android:orientation="horizontal"
-			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:layout_weight="0.2">
-
-			<Button android:id="@+android:id/drink_order_btn_clear"
-				android:layout_width="fill_parent" android:layout_height="fill_parent"
-				android:layout_weight="0.5" android:text="Clear" android:gravity="center"
-				android:layout_marginRight="5dp" android:background="@drawable/btn_redbg">
-			</Button>
-
-			<Button android:id="@+android:id/drink_order_btn_send"
-				android:layout_width="fill_parent" android:layout_height="fill_parent"
-				android:layout_weight="0.5" android:text="Send" android:gravity="center"
-				android:layout_marginLeft="5dp" android:background="@drawable/btn_greenbg">
-			</Button>
-
+		<LinearLayout android:layout_width="match_parent"
+			android:id="@+id/linearLayout3" android:layout_height="fill_parent"
+			android:layout_marginBottom="10dp" android:layout_weight="0.5">
+			<Button android:layout_width="wrap_content"
+				android:layout_margin="5dp" android:layout_weight="0.5"
+				android:id="@+android:id/drink_order_btn_clear" android:text="Clear"
+				android:layout_height="fill_parent" android:background="@drawable/btn_redbg" />
+			<Button android:layout_width="wrap_content"
+				android:layout_margin="5dp" android:layout_weight="0.5"
+				android:id="@+android:id/drink_order_btn_send" android:text="Send"
+				android:layout_height="fill_parent" android:background="@drawable/btn_greenbg" />
 		</LinearLayout>
-
-		<Button android:id="@+android:id/drink_order_btn_back"
-			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:text="&lt;&lt; Back" android:gravity="center"
-			android:layout_weight="0.2">
-		</Button>
+		<Button android:layout_width="match_parent"
+			android:layout_weight="0.5" android:id="@+android:id/drink_order_btn_back"
+			android:text="&lt;&lt; Back" android:layout_height="fill_parent" />
 	</LinearLayout>
-
 </LinearLayout>
