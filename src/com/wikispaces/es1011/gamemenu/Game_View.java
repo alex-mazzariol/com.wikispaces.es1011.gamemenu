@@ -179,6 +179,17 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			bRun = b;
 		}
 
+		/**
+		 * Updates all dimensions to match some proportions with the actual surface width and
+		 * height.
+		 * Ball is 1/12 of screen width wide and tall;
+		 * Pad is 1/15 of screen width tall and 1/15 of width wide.
+		 * Bricks have a proportion of 3:1, and are 1/7 of screen width wide.
+		 * The ball is positioned at the center of the screen. 
+		 * 
+		 * @param iWid
+		 * @param iHei
+		 */
 		public void setSurfaceSize(int iWid, int iHei) {
 			if (iWid == 0 || iHei == 0)
 				return;
@@ -222,13 +233,12 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
-		public void unpause() {
-			synchronized (shHolder) {
-				lTime = System.currentTimeMillis() + 100;
-			}
-			setStatus(eStatus.Running);
-		}
-
+		/**
+		 * Performs the drawing part of the game loop. All bitmaps are scaled and painted
+		 * on positions specified in the game status.
+		 *  
+		 * @param c The canvas to use
+		 */
 		private void doDraw(Canvas c) {
 			c.drawARGB(255, 80, 80, 80);
 
@@ -254,6 +264,10 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 					+ ", lives " + gST.iLives, 5, 17, pBlue);
 		}
 
+		/**
+		 * The logic part of the game loop. Updates the positions and checks for collisions.
+		 * 
+		 */
 		private void updateGame() {
 
 			if (gST.iBallX > (iCanvasW - bBall.getWidth() - 1))
