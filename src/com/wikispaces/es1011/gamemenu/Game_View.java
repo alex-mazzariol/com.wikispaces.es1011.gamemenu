@@ -10,11 +10,24 @@ import android.graphics.Rect;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+/**
+ * Provides a specialization of SurfaceView, with a thread to update itself.
+ * The thread has the game logic hardcoded in it.
+ * 
+ * @author Eugenio Enrico
+ */
 public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 	private Context mc;
 	private Game_Thread gThread;
 	private Game_Status gST;
-
+	
+	/**
+	 * Constructor for the Game_View. Initializes also itself as callback for
+	 * creation/destruction notifications, and creates a Game_Thread.
+	 * 
+	 * @param context The context to be used for resources
+	 * @param gs The current Game_Status reference
+	 */
 	public Game_View(Context context, Game_Status gs) {
 		super(context);
 		mc = context;
@@ -25,25 +38,33 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 		gThread = new Game_Thread(getHolder());
 	}
 
-	public Game_Thread getThread() {
-		return gThread;
-	}
-
+	/**
+	 * Makes sure the thread is paused when the window loses focus.
+	 */
 	public void onWindowFocusChanged(boolean hasWindowFocus) {
 		if (!hasWindowFocus)
 			gThread.pause();
 	}
 
+	/**
+	 * Updates the dimensions the thread relies on to calculate graphical effects.
+	 */
 	public void surfaceChanged(SurfaceHolder arg0, int format, int width,
 			int height) {
 		gThread.setSurfaceSize(width, height);
 	}
 
+	/**
+	 * Starts the thread. It could not be started before surface creation.
+	 */
 	public void surfaceCreated(SurfaceHolder arg0) {
 		gThread.setRunning(true);
 		gThread.doStart();
 	}
 
+	/**
+	 * Stops the thread, to save resources.
+	 */
 	public void surfaceDestroyed(SurfaceHolder arg0) {
 		boolean bb = true;
 		gThread.setRunning(false);
@@ -56,10 +77,21 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
+	/**
+	 * Enumeration of the game status.
+	 * @author Eugenio Enrico
+	 *
+	 */
 	public static enum eStatus {
-		Lose, Pause, Ready, Running, Win
+		Pause, Running
 	}
 
+	/**
+	 * The main game thread. Updates its surface, and has the game logic hardcoded in it.
+	 * 
+	 * @author Eugenio Enrico
+	 *
+	 */
 	class Game_Thread extends Thread {
 		private int iCanvasW, iCanvasH;
 		private eStatus sStatus;
@@ -74,6 +106,10 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 
 		private long lTime;
 
+		/**
+		 * Initializes the dimensions, using the surface frame.
+		 * @param sh
+		 */
 		public Game_Thread(SurfaceHolder sh) {
 			shHolder = sh;
 
@@ -81,6 +117,9 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 					.height());
 		}
 
+		/**
+		 * Starts the thread, initializing also the status variable and the last time.
+		 */
 		public void doStart() {
 			synchronized (shHolder) {
 				lTime = System.currentTimeMillis() + 100;
@@ -89,12 +128,19 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			start();
 		}
 
+		/**
+		 * Sets the new status.
+		 * @param newVal The status to set.
+		 */
 		public void setStatus(eStatus newVal) {
 			synchronized (shHolder) {
 				sStatus = newVal;
 			}
 		}
 
+		/**
+		 * Sets the paused status.
+		 */
 		public void pause() {
 			synchronized (shHolder) {
 				if (sStatus == eStatus.Running)
@@ -102,6 +148,9 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
+		/**
+		 * Main game loop. Tries to keep a constant framerate.
+		 */
 		public void run() {
 			while (bRun) {
 				if (System.currentTimeMillis() - lTime > 50) {
@@ -122,6 +171,10 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
+		/**
+		 * Sets the new thread running state
+		 * @param b
+		 */
 		public void setRunning(boolean b) {
 			bRun = b;
 		}

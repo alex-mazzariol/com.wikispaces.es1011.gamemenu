@@ -7,7 +7,6 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
@@ -144,10 +143,6 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	protected void onStop() {
 		stopPreview();
 		super.onStop();
-	}
-
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
 	}
 
 	public void onClick(View arg0) {

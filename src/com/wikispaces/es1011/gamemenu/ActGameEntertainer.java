@@ -56,6 +56,8 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 
 	/**
 	 * Called when the activity is first created.
+	 * Gets a reference to the Sensor manager (to handle the accelerometer) and a reference to the Power manager
+	 * (to lock the screen backlight always on). 
 	 * 
 	 * @param savedInstanceState
 	 */
@@ -80,14 +82,25 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 		gST = new Game_Status();
 	}
 
+	/**
+	 * Automatically called when the activity goes to background.
+	 * Causes the backlight lock to be released and the thread to be stopped.
+	 */
 	@Override
 	public void onPause() {
 		super.onPause();
 
 		gVw.surfaceDestroyed(null);
 		wlLock.release();
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 	}
 
+	/**
+	 * Automatically called when the activity should save its state.
+	 * Saves the game progresses.
+	 * 
+	 * @param outB The Bundle object game status will be saved into.
+	 */
 	protected void onSaveInstanceState(Bundle outB) {
 		outB.putInt("g_BX", gST.iBallX);
 		outB.putInt("g_BY", gST.iBallY);
@@ -100,6 +113,12 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 		outB.putIntArray("g_Bricks", gST.iBricks);
 	}
 
+	/**
+	 * Automatically called when the activity is about to resume normal operation.
+	 * Reloads the game progress.
+	 * 
+	 * @param inB The Bundle object containing the saved status.
+	 */
 	protected void onRestoreInstanceState(Bundle inB) {
 		if (inB != null) {
 			gST.iBallX = inB.getInt("g_BX");
@@ -124,6 +143,10 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 		super.onRestart();
 	}
 
+	/**
+	 * Automatically called when the activity becomes foreground.
+	 * Fixes the screen orientation to portrait
+	 */
 	@Override
 	protected void onResume() {
 		wlLock.acquire();
@@ -146,6 +169,10 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 		super.onDestroy();
 	}
 
+	/**
+	 * Receives the sensor event notification.
+	 * Saves in the Game_Status object the tilt value, to be used as pad speed.
+	 */
 	public void onSensorChanged(SensorEvent event) {
 		if (event.sensor.getType() != Sensor.TYPE_ORIENTATION) {
 			return;
