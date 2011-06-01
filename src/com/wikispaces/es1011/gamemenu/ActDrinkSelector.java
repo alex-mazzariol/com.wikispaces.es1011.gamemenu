@@ -16,13 +16,36 @@ public class ActDrinkSelector extends Activity {
 	private Drink_Order doCurrent;
 	private Drink_OriginalList dlList;
 	private ePage eBack;
-	private Long iDrinkDetailID;
+	private ePage eCurrentPage = ePage.pgList;
+	private long iDrinkDetailID = -1;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (savedInstanceState != null) {
+			eCurrentPage = savedInstanceState
+					.getString("d_page") != null ? ePage
+					.valueOf(savedInstanceState.getString("d_page"))
+					: ePage.pgList;
+
+			iDrinkDetailID = savedInstanceState.getLong("d_detailID", -1);
+			
+			eBack = savedInstanceState.getString("d_back") != null ?
+					ePage.valueOf(savedInstanceState.getString("d_back"))
+					: ePage.pgList;
+		}
+	}
+	
+	public void onStart() {
+		super.onStart();
 		doCurrent = new Drink_Order(this).dbOpen();
 		dlList = new Drink_OriginalList(this).dbOpen();
+	}
+
+	public void onStop() {
+		doCurrent.dbClose();
+		dlList.dbClose();
+		super.onStop();
 	}
 
 	private void showPage(ePage Page) {
@@ -102,16 +125,16 @@ public class ActDrinkSelector extends Activity {
 			((ImageButton) findViewById(R.id.drink_det_btn_plus))
 					.setOnClickListener(new OnClickListener() {
 						public void onClick(View v) {
-							doCurrent.drinkIncrement(iDrinkDetailID, dlList
-									.getDrinkName(iDrinkDetailID),
+							doCurrent.drinkIncrement(iDrinkDetailID,
+									dlList.getDrinkName(iDrinkDetailID),
 									dlList.getDrinkRawPrice(iDrinkDetailID));
 						}
 					});
 			((ImageButton) findViewById(R.id.drink_det_btn_minus))
 					.setOnClickListener(new OnClickListener() {
 						public void onClick(View v) {
-							doCurrent.drinkDecrement(iDrinkDetailID, dlList
-									.getDrinkName(iDrinkDetailID));
+							doCurrent.drinkDecrement(iDrinkDetailID,
+									dlList.getDrinkName(iDrinkDetailID));
 						}
 					});
 			((Button) findViewById(R.id.drink_det_btn_back))
@@ -132,10 +155,19 @@ public class ActDrinkSelector extends Activity {
 									+ iDrinkDetailID, null, null));
 			break;
 		}
+
+		eCurrentPage = Page;
 	}
 
 	public void onResume() {
 		super.onResume();
-		showPage(ePage.pgList);
+		showPage(eCurrentPage);
+	}
+
+	public void onSaveInstanceState(Bundle out) {
+		out.putString("d_page", eCurrentPage.name().toString());
+		out.putString("d_back", eBack.name().toString());
+		out.putLong("d_detailID", iDrinkDetailID);
+		super.onSaveInstanceState(out);
 	}
 }

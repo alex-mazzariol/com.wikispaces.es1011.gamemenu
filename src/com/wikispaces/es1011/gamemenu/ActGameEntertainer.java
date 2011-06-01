@@ -75,7 +75,7 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 				PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass().getName());
 
 		mAccelerometer = mSensorManager
-				.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mSensorManager.registerListener((SensorEventListener) this,
 				mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
 
@@ -174,11 +174,11 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 	 * Saves in the Game_Status object the tilt value, to be used as pad speed.
 	 */
 	public void onSensorChanged(SensorEvent event) {
-		if (event.sensor.getType() != Sensor.TYPE_ORIENTATION) {
+		if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER) {
 			return;
 		}
 
-		gST.iPadSpeed = (int) event.values[2];
+		gST.iPadSpeed = -(int) event.values[0];
 	}
 
 	public void onAccuracyChanged(Sensor arg0, int arg1) {

@@ -32,7 +32,7 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 		super(context);
 		mc = context;
 		gST = gs;
-		
+
 		getHolder().addCallback(this);
 
 		gThread = new Game_Thread(getHolder());
@@ -201,20 +201,20 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 
 				bBrick = new Bitmap[4];
 				bBrick[0] = Bitmap
-						.createScaledBitmap(BitmapFactory.decodeResource(
-								mc.getResources(), R.drawable.game_brick1),
+						.createScaledBitmap(BitmapFactory.decodeResource(mc
+								.getResources(), R.drawable.game_brick1),
 								iBrickW, iBrickH, true);
 				bBrick[1] = Bitmap
-						.createScaledBitmap(BitmapFactory.decodeResource(
-								mc.getResources(), R.drawable.game_brick2),
+						.createScaledBitmap(BitmapFactory.decodeResource(mc
+								.getResources(), R.drawable.game_brick2),
 								iBrickW, iBrickH, true);
 				bBrick[2] = Bitmap
-						.createScaledBitmap(BitmapFactory.decodeResource(
-								mc.getResources(), R.drawable.game_brick3),
+						.createScaledBitmap(BitmapFactory.decodeResource(mc
+								.getResources(), R.drawable.game_brick3),
 								iBrickW, iBrickH, true);
 				bBrick[3] = Bitmap
-						.createScaledBitmap(BitmapFactory.decodeResource(
-								mc.getResources(), R.drawable.game_brick4),
+						.createScaledBitmap(BitmapFactory.decodeResource(mc
+								.getResources(), R.drawable.game_brick4),
 								iBrickW, iBrickH, true);
 
 				gST.iDefaultX = (iCanvasW - bBall.getWidth()) / 2;
@@ -250,8 +250,8 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 			pBlue.setTextSize(16);
 
 			c.drawRect(new Rect(0, 0, iCanvasW, 19), pBlack);
-			c.drawText("Level " + Integer.toString(gST.iLevel - 13) + ", lives "
-					+ gST.iLives, 5, 17, pBlue);
+			c.drawText("Level " + Integer.toString(gST.iLevel - 13)
+					+ ", lives " + gST.iLives, 5, 17, pBlue);
 		}
 
 		private void updateGame() {
@@ -281,9 +281,11 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 					int iBrickX = iOffsetXBricks + (i % 7) * iBrickW;
 					int iBrickY = (int) Math.floor(i / 7) * iBrickH + 20;
 					// Check collision
-					boolean bXCollision = gST.iBallX > iBrickX - bBall.getWidth()
+					boolean bXCollision = gST.iBallX > iBrickX
+							- bBall.getWidth()
 							&& gST.iBallX < iBrickX + iBrickW;
-					boolean bYCollision = gST.iBallY > iBrickY - bBall.getHeight()
+					boolean bYCollision = gST.iBallY > iBrickY
+							- bBall.getHeight()
 							&& gST.iBallY < iBrickY + iBrickH;
 					if (bXCollision && bYCollision) {
 						// Collided!
@@ -361,7 +363,16 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 						gST.iDirY *= -1;
 					}
 				}
-				
+
+				// Add pad speed
+				gST.iDirX += gST.iPadSpeed / 2;
+
+				if (gST.iDirX > 8)
+					gST.iDirX = 8;
+
+				if (gST.iDirX < -8)
+					gST.iDirX = -8;
+
 			}
 
 			gST.iBallX += gST.iDirX;
@@ -369,10 +380,10 @@ public class Game_View extends SurfaceView implements SurfaceHolder.Callback {
 
 			gST.iPadX += gST.iPadSpeed;
 
-			if(gST.iPadX < 0)
+			if (gST.iPadX < 0)
 				gST.iPadX = 0;
-			
-			if(gST.iPadX > iCanvasW - bPad.getWidth())
+
+			if (gST.iPadX > iCanvasW - bPad.getWidth())
 				gST.iPadX = iCanvasW - bPad.getWidth();
 		}
 	}

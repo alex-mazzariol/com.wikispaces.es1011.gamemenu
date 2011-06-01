@@ -131,17 +131,19 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 			rLL.getChildAt(1).setLayoutParams(new LayoutParams(180, 240));
 		}
 		correctOrientation(iR);
+		EnableGPS();
 	}
 
 	@Override
 	protected void onPause() {
 		stopPreview();
+		rLL.removeViewAt(1);
+		DisableGPS();
 		super.onPause();
 	}
 
 	@Override
 	protected void onStop() {
-		stopPreview();
 		super.onStop();
 	}
 
@@ -185,7 +187,6 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		EnableGPS();
 	}
 
 	public void stopPreview() {
@@ -203,9 +204,7 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 			}
 			cCamera.release();
 			cCamera = null;
-			rLL.removeViewAt(1);
 		}
-		DisableGPS();
 	}
 
 	public void correctOrientation(int rotation) {
