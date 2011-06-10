@@ -12,6 +12,11 @@ import android.widget.Adapter;
 import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
 
+/**
+ * A list view that does not automatically scroll.
+ * @author Amarilli Alessandro
+ *
+ */
 public class LinearListView extends LinearLayout {
 	Adapter adapter;
 	Observer observer = new Observer(this);

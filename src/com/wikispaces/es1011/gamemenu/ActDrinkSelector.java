@@ -8,6 +8,11 @@ import android.widget.*;
 import android.view.*;
 import android.view.View.OnClickListener;
 
+/**
+ * Activity for the DrinkSelector tab
+ * @author Amarilli Alessandro
+ *
+ */
 public class ActDrinkSelector extends Activity {
 	private enum ePage {
 		pgList, pgOrder, pgDetail
@@ -19,6 +24,9 @@ public class ActDrinkSelector extends Activity {
 	private ePage eCurrentPage = ePage.pgList;
 	private long iDrinkDetailID = -1;
 
+	/**
+	 * Restores saved page, if any.
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -48,6 +56,10 @@ public class ActDrinkSelector extends Activity {
 		super.onStop();
 	}
 
+	/**
+	 * Provides a centralized entry point for page changes. Once a page is loaded, adjusts its content too.
+	 * @param Page The page to display.
+	 */
 	private void showPage(ePage Page) {
 		switch (Page) {
 		case pgList:
@@ -164,6 +176,9 @@ public class ActDrinkSelector extends Activity {
 		showPage(eCurrentPage);
 	}
 
+	/**
+	 * Saves the current page, for a nice user experience.
+	 */
 	public void onSaveInstanceState(Bundle out) {
 		out.putString("d_page", eCurrentPage.name().toString());
 		out.putString("d_back", eBack.name().toString());

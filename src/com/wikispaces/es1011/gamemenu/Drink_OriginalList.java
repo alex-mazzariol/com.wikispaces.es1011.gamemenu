@@ -6,6 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Abstracts the list of all drinks.
+ * @author Amarilli Alessandro
+ *
+ */
 public class Drink_OriginalList {
 
 	private class dbHelper extends SQLiteOpenHelper {
@@ -29,7 +34,7 @@ public class Drink_OriginalList {
 		public void onCreate(SQLiteDatabase db) {
 			db
 					.execSQL("create table drink_list (_id integer primary key, d_name text, d_price text, d_description text);");
-			// Inserire il listino di default
+			// Insert default drink list
 			ContentValues cvVal = new ContentValues();
 			cvVal.put("d_price", "5.00");
 			cvVal.put("d_description", sLoremIpsum);
@@ -50,26 +55,45 @@ public class Drink_OriginalList {
 	private SQLiteDatabase db;
 	private dbHelper dbh;
 
+	/**
+	 * Instantiates a drink list object.
+	 * @param context The context used to gain access to the database
+	 */
 	public Drink_OriginalList(Context context) {
 		mCtx = context;
 	}
 
+	/**
+	 * Opens a connection to the database
+	 * @return This object, with the connection open.
+	 */
 	public Drink_OriginalList dbOpen() {
 		dbh = new dbHelper(mCtx);
 		db = dbh.getWritableDatabase();
 		return this;
 	}
 
+	/**
+	 * Closes the connection to the database and frees associated resources.
+	 */
 	public void dbClose() {
 		dbh.close();
 	}
 
+	/**
+	 * Returns a table with the full list of drinks.
+	 * @return A table with the full list of drinks.
+	 */
 	public Cursor getDrinkList() {
 		return db.query("drink_list",
 				new String[] { "_id", "d_name", "d_price" }, null, null, null,
 				null, null);
 	}
 
+	/**
+	 * Returns the number of items in the list.
+	 * @return The number of items in the list.
+	 */
 	public int getListCount() {
 		Cursor mC = db.query("drink_list",
 				new String[] { "count(d_name) as d_tot" }, null, null, null,
@@ -84,6 +108,11 @@ public class Drink_OriginalList {
 			return 0;
 	}
 
+	/**
+	 * Returns the name of the specified drink
+	 * @param drink_id The drink to look for.
+	 * @return The name of the specified drink.
+	 */
 	public String getDrinkName(long drink_id) {
 		Cursor mC = db.query("drink_list", new String[] { "d_name" }, "_id="
 				+ drink_id, null, null, null, null);
@@ -98,6 +127,11 @@ public class Drink_OriginalList {
 			return "";
 	}
 	
+	/**
+	 * Returns the price of the specified drink, formatted as a string.
+	 * @param drink_id The drink to look for.
+	 * @return The price of the specified drink, formatted as string with " EUR" appended.
+	 */
 	public String getDrinkPrice(long drink_id) {
 		Cursor mC = db.query("drink_list", new String[] { "d_price" }, "_id="
 				+ drink_id, null, null, null, null);
@@ -112,6 +146,11 @@ public class Drink_OriginalList {
 			return "";
 	}
 	
+	/**
+	 * Returns the price of the specified drink.
+	 * @param drink_id The drink to look for.
+	 * @return The price of the specified drink, as a double precision number.
+	 */
 	public double getDrinkRawPrice(long drink_id) {
 		Cursor mC = db.query("drink_list", new String[] { "d_price" }, "_id="
 				+ drink_id, null, null, null, null);
@@ -126,6 +165,11 @@ public class Drink_OriginalList {
 			return 0.0;
 	}
 	
+	/**
+	 * Returns the long description of the specified drink.
+	 * @param drink_id The drink to look for.
+	 * @return The string of the long description for the drink.
+	 */
 	public String getDrinkLong(long drink_id){
 		Cursor mC = db.query("drink_list", new String[] { "d_description" }, "_id="
 				+ drink_id, null, null, null, null);

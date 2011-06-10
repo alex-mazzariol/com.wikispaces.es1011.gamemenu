@@ -11,6 +11,11 @@ import android.os.PowerManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * Main activity for the Game tab.
+ * @author Eugenio Enrico
+ *
+ */
 public class ActGameEntertainer extends Activity implements SensorEventListener {
 
 	private PowerManager.WakeLock wlLock;

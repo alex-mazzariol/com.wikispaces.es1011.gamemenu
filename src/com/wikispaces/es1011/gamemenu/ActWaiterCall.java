@@ -26,6 +26,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Main activity for the Waiter tab
+ * @author Mazzariol Alex
+ *
+ */
 public class ActWaiterCall extends Activity implements OnClickListener,
 		SurfaceHolder.Callback, LocationListener {
 
@@ -40,6 +45,9 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	private int iOrientation = 0;
 	private Context cxActivity;
 
+	/**
+	 * Initializes the Location system service.
+	 */
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
@@ -83,6 +91,9 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 		setContentView(rLL);
 	}
 
+	/**
+	 * Activates the Location provider and enables updates reception.
+	 */
 	private void EnableGPS() {
 		String sProv = lMan.getBestProvider(cBest, false);
 
@@ -98,10 +109,16 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 		locUpdHandler.sendEmptyMessage(0);
 	}
 
+	/**
+	 * Stops receiving location updates.
+	 */
 	private void DisableGPS() {
 		lMan.removeUpdates(this);
 	}
 
+	/**
+	 * Handles notification of location updates
+	 */
 	private Handler locUpdHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -114,6 +131,9 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	};
 
 	@Override
+	/**
+	 * Prepares the surface for the camera preview and enables the location updates.
+	 */
 	public void onResume() {
 		super.onResume();
 
@@ -135,6 +155,9 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	}
 
 	@Override
+	/**
+	 * Stops receiving location updates and camera preview frames.
+	 */
 	protected void onPause() {
 		stopPreview();
 		rLL.removeViewAt(1);
@@ -147,6 +170,9 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 		super.onStop();
 	}
 
+	/**
+	 * Starts the picture shot.
+	 */
 	public void onClick(View arg0) {
 		if (cCamera != null)
 			try {
@@ -170,6 +196,9 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 		stopPreview();
 	}
 
+	/**
+	 * Opens the camera device and starts the preview on the svPreview surface.
+	 */
 	public void startPreview() {
 		if (hPreview == null || cCamera != null)
 			return;
@@ -189,6 +218,9 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 		}
 	}
 
+	/**
+	 * Releases the camera object
+	 */
 	public void stopPreview() {
 		if (cCamera != null) {
 			cCamera.stopPreview();
@@ -207,10 +239,13 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 		}
 	}
 
-	public void correctOrientation(int rotation) {
+	private void correctOrientation(int rotation) {
 		iOrientation = (rotation * (-90) + 90) % 360;
 	}
 
+	/**
+	 * Handles a successful camera shot. Saves the image and current location to a file. 
+	 */
 	Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 		public void onPictureTaken(byte[] imageData, Camera c) {
 

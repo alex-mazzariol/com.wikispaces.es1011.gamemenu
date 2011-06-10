@@ -7,9 +7,17 @@ import android.content.*;
 import android.content.res.*;
 import android.os.*;
 
+/**
+ * The TabActivity that wraps all the three tabs of the application.
+ * @author Mazzariol Alex
+ *
+ */
 public class GameMenu extends TabActivity {
-    /** Called when the activity is first created. */
+
     @Override
+    /**
+     * Initializes the tab host and the three activities.
+     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);

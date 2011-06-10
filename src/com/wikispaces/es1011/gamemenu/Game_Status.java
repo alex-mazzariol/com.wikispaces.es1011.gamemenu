@@ -47,6 +47,9 @@ public class Game_Status {
 		iLives = 3;
 	}
 	
+	/**
+	 * Resets ball position to the center of the screen, and decrements the lives counter.
+	 */
 	public void loseLife() {
 		iBallX = iDefaultX;
 		iBallY = iDefaultY;

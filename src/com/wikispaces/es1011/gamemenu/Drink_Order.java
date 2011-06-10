@@ -6,6 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Abstracts the list of drinks in the current order.
+ * @author Amarilli Alessandro
+ *
+ */
 public class Drink_Order {
 
 	private class dbHelper extends SQLiteOpenHelper {
@@ -30,16 +35,27 @@ public class Drink_Order {
 	private SQLiteDatabase db;
 	private dbHelper dbh;
 
+	/**
+	 * Instantiates a drink order object.
+	 * @param context The context used to gain access to the database
+	 */
 	public Drink_Order(Context context) {
 		mCtx = context;
 	}
 
+	/**
+	 * Opens a connection to the database
+	 * @return This object, with the connection open.
+	 */
 	public Drink_Order dbOpen() {
 		dbh = new dbHelper(mCtx);
 		db = dbh.getWritableDatabase();
 		return this;
 	}
 
+	/**
+	 * Closes the connection to the database and frees associated resources.
+	 */
 	public void dbClose() {
 		dbh.close();
 	}
@@ -51,9 +67,7 @@ public class Drink_Order {
 	 *            The identifier for the drink to add.
 	 * @return -1 if failed.
 	 */
-	private long insertItem(long drink_id, String d_name, double dPrice) {
-		// Automaticamente l'inserimento di un drink in un ordine
-		// significa inserire una riga con quantità 1
+	private long insertItem(long drink_id, String d_name, double dPrice) {		
 		ContentValues cvData = new ContentValues();
 		cvData.put("_id", drink_id);
 		cvData.put("d_qty", 1);
@@ -63,6 +77,10 @@ public class Drink_Order {
 		return db.insert("drink_order", null, cvData);
 	}
 
+	/**
+	 * Returns a table with the current order.
+	 * @return The order table
+	 */
 	public Cursor getOrderList() {
 		return db.query("drink_order",
 				new String[] { "_id", "d_name", "d_qty" }, null, null, null,
@@ -91,6 +109,13 @@ public class Drink_Order {
 		}
 	}
 
+	/**
+	 * Updates the table to new values.
+	 * @param drink_id The drink to update
+	 * @param d_name The name of the drink
+	 * @param d_qty The quantity to set
+	 * @return True if update successful.
+	 */
 	private long setDrinkQuantity(long drink_id, String d_name, int d_qty) {
 		ContentValues cV = new ContentValues();
 		cV.put("_id", drink_id);
@@ -100,11 +125,18 @@ public class Drink_Order {
 		return db.update("drink_order", cV, "_id=" + drink_id, null);
 	}
 
+	/**
+	 * Adds one to the current order quantity of specified drink. To keep the database simple, many parameters should be passed.
+	 * @param drink_id The drink to increment
+	 * @param drink_name The name of the drink
+	 * @param d_price The price of the drink
+	 * @return The updated value
+	 */
 	public long drinkIncrement(long drink_id, String drink_name, double d_price) {
 		int iActual = getDrinkQuantity(drink_id);
 
 		if (iActual < 0) {
-			// Bisogna aggiungere la riga
+			// Insert the row too
 			if (insertItem(drink_id, drink_name, d_price) < 0)
 				return 0;
 			else
@@ -117,6 +149,12 @@ public class Drink_Order {
 		}
 	}
 
+	/**
+	 * Decrements the quantity of specified drink. To keep the database simple, many parameters should be passed.
+	 * @param drink_id The drink to decrement
+	 * @param drink_name The name of the drink
+	 * @return The updated value.
+	 */
 	public long drinkDecrement(long drink_id, String drink_name) {
 		int iActual = getDrinkQuantity(drink_id);
 
@@ -135,14 +173,26 @@ public class Drink_Order {
 		return iActual;
 	}
 
+	/**
+	 * Completely removes a row from the order
+	 * @param drink_id The drink to remove
+	 * @return True if deletion successful.
+	 */
 	private int deleteOrder(long drink_id) {
 		return db.delete("drink_order", "_id=" + drink_id, null);
 	}
 
+	/**
+	 * Clears the order.
+	 */
 	public void orderClear() {
 		db.execSQL("delete from drink_order");
 	}
 
+	/**
+	 * Returns the total number of items in the order.
+	 * @return The total number of items.
+	 */
 	public int getItemsCount() {
 		Cursor mC = db.query("drink_order",
 				new String[] { "sum(d_qty) as d_tot" }, null, null, null, null,
@@ -157,6 +207,10 @@ public class Drink_Order {
 			return 0;
 	}
 
+	/**
+	 * Returns the number of different drinks in the order.
+	 * @return The number of different drinks.
+	 */
 	public int getListCount() {
 		Cursor mC = db.query("drink_order",
 				new String[] { "count(d_qty) as d_tot" }, null, null, null,
@@ -171,6 +225,10 @@ public class Drink_Order {
 			return 0;
 	}
 
+	/**
+	 * Calculates the grand total of the current order, summing up prices for every item.
+	 * @return The grand total of the current order.
+	 */
 	public String getOrderTotal() {
 		Cursor mC = db.query("drink_order",
 				new String[] { "d_qty", "d_price" }, null, null, null, null,
