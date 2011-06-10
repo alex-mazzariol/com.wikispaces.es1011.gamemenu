@@ -85,10 +85,6 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 		rLL.addView(tvLocation);
 
 		rLL.setOnClickListener(this);
-
-		getWindow().setFormat(PixelFormat.TRANSLUCENT);
-
-		setContentView(rLL);
 	}
 
 	/**
@@ -135,8 +131,9 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	 * Prepares the surface for the camera preview and enables the location updates.
 	 */
 	public void onResume() {
-		super.onResume();
 
+		setContentView(rLL);
+		
 		svPreview = new SurfaceView(this);
 		hPreview = svPreview.getHolder();
 		hPreview.addCallback(this);
@@ -152,6 +149,8 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 		}
 		correctOrientation(iR);
 		EnableGPS();
+
+		super.onResume();
 	}
 
 	@Override
@@ -159,6 +158,7 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	 * Stops receiving location updates and camera preview frames.
 	 */
 	protected void onPause() {
+		hPreview.removeCallback(this);
 		stopPreview();
 		rLL.removeViewAt(1);
 		DisableGPS();
@@ -183,17 +183,13 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	}
 
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-		hPreview = arg0;
-		startPreview();
 	}
 
 	public void surfaceCreated(SurfaceHolder arg0) {
-		hPreview = arg0;
 		startPreview();
 	}
 
 	public void surfaceDestroyed(SurfaceHolder arg0) {
-		stopPreview();
 	}
 
 	/**
@@ -202,15 +198,10 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	public void startPreview() {
 		if (hPreview == null || cCamera != null)
 			return;
+		
 		try {
 			cCamera = Camera.open();
 			cCamera.setPreviewDisplay(hPreview);
-			cCamera.setPreviewCallback(new PreviewCallback() {
-				// Called for each frame previewed
-				public void onPreviewFrame(byte[] data, Camera camera) {
-					svPreview.invalidate();
-				}
-			});
 			cCamera.setDisplayOrientation(iOrientation);
 			cCamera.startPreview();
 		} catch (IOException e) {
@@ -223,6 +214,7 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 	 */
 	public void stopPreview() {
 		if (cCamera != null) {
+			android.util.Log.w("Cam", "Stop preview");
 			cCamera.stopPreview();
 
 			// Next two calls are needed before release() because if
@@ -236,6 +228,7 @@ public class ActWaiterCall extends Activity implements OnClickListener,
 			}
 			cCamera.release();
 			cCamera = null;
+			hPreview = null;
 		}
 	}
 

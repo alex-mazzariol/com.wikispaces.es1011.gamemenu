@@ -93,11 +93,12 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 	 */
 	@Override
 	public void onPause() {
-		super.onPause();
-
 		gVw.surfaceDestroyed(null);
+		gVw = null;
 		wlLock.release();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		
+		super.onPause();
 	}
 
 	/**
@@ -138,16 +139,6 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 		}
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-	}
-
 	/**
 	 * Automatically called when the activity becomes foreground.
 	 * Fixes the screen orientation to portrait
@@ -162,16 +153,6 @@ public class ActGameEntertainer extends Activity implements SensorEventListener 
 		setContentView(gVw);
 
 		super.onResume();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 	/**
