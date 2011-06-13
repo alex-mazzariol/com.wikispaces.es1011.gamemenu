@@ -12,7 +12,7 @@ Since the Android SDK auto-generates a resources file (R.java), but this is NOT 
 To use the app you should have a real device, since the game uses the accelerometer to move the pad.
 
 ##The application
-The app is organized as three tabs; the first one is relative to the drink list, drink details and current order. The second tab enables the user to take a photo of its table number and send it to the waiter, to call him. The third tab contains a little game, to entertain the user while he waits for his drinks.
+The app is organized in three tabs; the first one is relative to the drink list, drink details and current order. The second tab enables the user to take a photo of its table number and send it to the waiter, to call him. The third tab contains a little game, to entertain the user while he waits for his drinks.
 
 ###The main TabActivity
 The TabActivity that hosts all other activities is in the GameMenu class. It just instantiates the tabs and attaches to them an intent that starts the related activity.
@@ -47,6 +47,7 @@ Apart from the Activity, only a single View has been made to fit the project. Li
 On the onChanged event (referred to the DataSet being observed), the object populates itself with the views from the data adapter.
 
 Drink_ImageListAdapter provides such a data adapter, and inflates a drink_listitem layout for every item in the dataset required. The inflated layout is also populated with data from the item.
+Drink images are stored in the database as names, and the Drink_ImageListAdapter loads them from the PNG in the resources.
 
 Two more objects, namely Drink_Order and Drink_OriginalList hide the abstraction of the current order model and the original list model. Such objects access the database in similar ways, instantiating an SQLiteOpenHelper and executing simple queries.
 The Drink_OriginalList model handles database creation and population with dummy data, and exposes methods to retrieve the full list of drinks and details about a particular drink.   
@@ -62,6 +63,39 @@ Upon creation a handle to the location manager is obtained. When the activity re
 Camera preview is rotated to compensate for screen rotation: although the camera top left pixel is always still with respect to the phone, the top left pixel of the screen is changed on rotation. The correctOrientation() subroutine handles this situation.
 Camera preview and location updates are halted when the activity loses focus, to save battery.
 
+If location services are not enabled on the device, the system configuration screen is invoked (see first lines of EnableGPS() in ActWaiterCall); if the user dismisses that he will not be asked anymore.
+
 When the user taps on the part of the screen devoted to the activity, takePicture() is invoked on the camera. When the specified callback object is notified that a photo has been shot, it just saves the jpeg to a file and the current GPS location to another file. It then displays a "toast" message, simulating a successful notification to the waiter. 
 
 ###The game entertainer tab
+This activity has the main purpose of demonstrating access to the accelerometer data. Other functionality demonstrated here is locking the screen backlight on, threading, canvas drawing and a menu connected to the MENU button on the device.
+The implemented game is a classic brick breaker, where the brick number is incremented as the level increases and the pad is moved by tilting the device.
+The game, once started, instantiates a particular subclass of SurfaceView (called Game_View), a Game_Status object, and locks the screen backlight on.
+If the activity loses foreground the View is immediately notified (so some simple teardown is performed, to save battery life) and the screen backlight lock is released.
+
+The game screen should not be rotated; the code in the startup/teardown sections of the activity handles this requirement too.
+
+All the game logic is hard-coded into the Game_Thread object, inside the Game_View class.
+This thread, since it is defined as an internal class of a SurfaceView, can use the same surface holder object. This is important because only the thread that owns a SurfaceView can draw on it, and implementing some sort of other message-passing among threads would have caused too much delay.
+The main game loop begins with the thread creation, and performs some basic status update (ball position, bounding box checks) and draws the PNG files from the resources on the surface.
+
+The Game_Status object exposes methods for resetting a game, increment the level or lose a life.
+
+The Activity (ActGameEntertainer) registers itself as a listener for accelerometer events, sets up the backlight lock and creates the surface object.
+On an accelerometer event, the pad speed in the Game_Status object is directly adjusted.
+The Activity saves and restores game data from a Bundle object, to handle simple restarts (but no persistence on file or database is provided).
+ActGameEntertainer provides also a simple contextual MENU, with only one entry, that restarts the game from scratch (calling an appropriate method on Game_Status).
+
+The Game_View object creates a Game_Thread and starts it when the surface is actually created (thread start is handled in the surfaceCreated() event).
+When the View is destroyed the thread is gracefully stopped (by using an internal status variable and a join() call).
+
+The thread has two status variables: bRun and sStatus. bRun should be set to true as long as the game is needed, as setting it to false will cause the thread to exit its run() cycle.
+sStatus controls the variables update: when it is set to false the draw loop is executed but the update branch is not taken (i.e. the ball and pad stand still).
+The updateGame() routine checks for collisions, with the classic bounding box algorythm; the doDraw() routine draws all the PNGs and rectangles/texts on the canvas attached to the surface.
+
+As a little feature, the horizontal speed of the ball is incremented/decremented with the speed of the pad when the collision occurs, to give some unpredictability to the game.
+
+A lot of synchronization is involved in the thread operations, mainly to avoid accessing the surface holder while it's being used to have a canvas.
+
+##Known bugs
+There is a known bug on returning from the game tab to the camera tab; the camera preview is not displayed anymore although the camera is correctly started and can take photos. 
