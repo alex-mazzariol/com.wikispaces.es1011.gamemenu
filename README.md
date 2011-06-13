@@ -1,8 +1,8 @@
 # GameMenu
-This is an Android application aimed at beautifying the experience of an american bar customer.
+This is an Android application aimed at improving the experience of an american bar customer.
 
 ##The project
-This software is developed as an UNIPD project for the Embedded Systems course. Main page of the course is at http://es1011.wikispaces.com/
+This software is developed as an UNIPD project for the Embedded Systems course (a.y. 2010/2011). Main page of the course is at http://es1011.wikispaces.com/
 
 ##Usage
 This repository has been uploaded using Eclipse with the Egit plugin.
@@ -13,6 +13,9 @@ To use the app you should have a real device, since the game uses the accelerome
 
 ##The application
 The app is organized as three tabs; the first one is relative to the drink list, drink details and current order. The second tab enables the user to take a photo of its table number and send it to the waiter, to call him. The third tab contains a little game, to entertain the user while he waits for his drinks.
+
+###The main TabActivity
+The TabActivity that hosts all other activities is in the GameMenu class. It just instantiates the tabs and attaches to them an intent that starts the related activity.
 
 ###The drink list tab
 The main purpose of this activity is to show a simple usage of a database to store and retrieve informations about a drink list and a current drink order.
@@ -50,8 +53,15 @@ The Drink_OriginalList model handles database creation and population with dummy
 The Drink_Order model does not do anything particular on database creation (creates the current order table), but exposes many methods to insert and update drink quantities into the table. Many drink details are duplicated for simplicity, and the whole data access model is not optimized for performance.
 
 Database is kept between shutdowns of the activity, so the current order is persisted this way. The current page is not an important information to keep, so it is persisted on the Bundle object (this is to make for a nice and simple screen-rotation handling).
+Both when the order is "cleared" or "sent" the table of the database containing the order is actually cleared. Anyway, different "toast" messages are displayed.
 
 ###The waiter call tab
+The sole purpose of this tab is to demonstrate access to the hardware of the device; the focus is on the camera and location services.
+The supposed function is to send a photo and a location to the waiter, for him to reach the table.
+Upon creation a handle to the location manager is obtained. When the activity resumes, the location manager is asked to signal to the appropriate handler any location updates, and the camera preview is started.
+Camera preview is rotated to compensate for screen rotation: although the camera top left pixel is always still with respect to the phone, the top left pixel of the screen is changed on rotation. The correctOrientation() subroutine handles this situation.
+Camera preview and location updates are halted when the activity loses focus, to save battery.
 
+When the user taps on the part of the screen devoted to the activity, takePicture() is invoked on the camera. When the specified callback object is notified that a photo has been shot, it just saves the jpeg to a file and the current GPS location to another file. It then displays a "toast" message, simulating a successful notification to the waiter. 
 
 ###The game entertainer tab
